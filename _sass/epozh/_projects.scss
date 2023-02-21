@@ -6,15 +6,15 @@
     display: inline-block; 
     list-style-type: none;
     margin: 0px;
-    padding-top: 30px;
+    margin-top: 16px;
+    margin-bottom: 48px;
 
     min-height: 90vh;
   
     .list-item {
-        float: left; 
-        margin: 10px 5px;
-        margin-bottom: 10px;
-        width: calc(100% / 3 - 10px);
+        float: left;
+        margin: 16px 8px;
+        width: calc(100% / 2 - 16px);
         position: relative;
         overflow: hidden;
     }
@@ -24,11 +24,11 @@
         width: 100%;
 
         img {
-            height: 120px;
+            height: 128px;
             width: 100%;
             object-fit: cover;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
         a {
@@ -70,7 +70,7 @@
 
     .project-link {
         font-size: 14px;
-        padding: 10px 15px;
+        padding: 12px 16px;
         font-weight: 600;
         width: 100%;
 
