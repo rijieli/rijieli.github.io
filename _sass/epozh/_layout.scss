@@ -34,7 +34,7 @@
     -webkit-font-smoothing: antialiased;
     line-height: $nav-height;
     color: $dark-color;
-    letter-spacing: -1px;
+    letter-spacing: 0px;
     min-width: 80px;
 
     &:hover {
@@ -58,7 +58,7 @@
       }
     }
 
-    font-size: 17px;
+    font-size: 16px;
     padding: 0;
     margin: 0 0 0 20px;
     height: $nav-height;
@@ -79,7 +79,7 @@
       color: $grey-dark-color;
       line-height: $nav-height;
       font-weight: 650;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
 
       &.active {
         color: $dark-color !important;

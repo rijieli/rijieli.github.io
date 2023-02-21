@@ -1,10 +1,10 @@
 .blog-card-shadow {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px -4px;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 19px;
+  border-radius: 20px;
 
   @media screen and (prefers-color-scheme: dark) {
-    border-color: rgba(200, 200, 200, 0.2);
+    border-color: rgba(255, 255, 255, 0.04);
   }
 }
 
