@@ -1,0 +1,5 @@
+{%- if jekyll.environment == "production" -%}
+<script src="/assets/tools/{{include.name}}.min.js" ></script>
+{%- else -%}
+<script src="/assets/tools/source/{{include.name}}.js" ></script>
+{%- endif -%}

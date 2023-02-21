@@ -1,0 +1,99 @@
+---
+layout: default
+---
+
+{% capture sidebar_content %}
+<!-- <div class="share-sidebar">
+  <button> Share </button>
+</div> -->
+<div>
+  <p class="toc-sidebar-header">目录</p>
+  {%- include toc.html html=content h_min=2 h_max=2 class='toc-sidebar' item_class='toc-sidebar-item' -%}
+</div>
+{% endcapture %}
+{%- include sidebar.html sidebar_content=sidebar_content -%}
+
+<div class="wrapper">
+  <article class="content h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-meta">
+      <a class="post-back-button" href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" stroke="#000" stroke-width="2"
+          class="blog-header__title__icon" id="post-back-button-icon">
+          <path fill="none" stroke-linecap="round" stroke-linejoin="round" d="M7 3L4 6l3 3"></path>
+        </svg>
+        返回
+      </a>
+      <time class="post-date" class="dt-published" datetime="{{ page.date | date_to_xmlschema }}"
+        itemprop="datePublished">
+        {{ page.date | date: site.data_formats.date_format_short }}
+      </time>
+    </div>
+
+    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+
+    <div class="post-meta">
+      {%- if page.categories -%}
+      {% for tag in page.categories %}
+      <div class="post-category">
+        &nbsp;<a href="/tags/#{{tag}}"> {{tag}}</a>&nbsp;&nbsp;/
+      </div>
+      {% endfor %}
+      {%- endif-%}
+
+      {% if page.author %}
+      <span class="post-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-author h-card" itemprop="name">by {{ page.author }}</span>
+      </span>
+      {% else %}
+      <span class="post-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-author h-card" itemprop="name">by Roger</span>
+      </span>
+      {% endif %}
+    </div>
+
+    <div class="post-content e-content" itemprop="articleBody">
+      {{ content }}
+    </div>
+
+    <hr class="post-hr">
+
+    {%- include disqus_comments.html -%}
+
+
+    <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+  </article>
+
+  {% if site.allow_comment and page.comment %}
+  {% include comment.html %}
+  {% endif %}
+
+
+  {% include scroll_to_top.html %}
+
+  <div class="post-image-viewer">
+    <div class="image-viewer-wrapper">
+      <img src="">
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+  let toc_item_count = document.querySelectorAll(".toc-sidebar-item").length
+  
+  if(toc_item_count < 2) {
+    document.querySelector("#sidebar").remove()
+  }
+
+  let imgDom = document.querySelector(".post-image-viewer");
+  document.querySelectorAll(".post-content img").forEach(e => e.addEventListener("click", showImage))
+  imgDom.addEventListener("click", e => imgDom.style.display = "none");
+
+  function showImage(evt) {
+    let imgDomImage = document.querySelector(".post-image-viewer img");
+    imgDomImage.src = evt.target.src;
+    imgDom.style.display = "block";
+  }
+</script>

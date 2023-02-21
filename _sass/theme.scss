@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+// Define defaults for each variable.
+
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("/assets/Roboto_Condensed.ttf");
+}
+
+$base-font-family: ui-sans-serif, system-ui, -apple-system, Helvetica, "Helvetica Neue", PingFang SC,
+  BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Microsoft YaHei", sans-serif,
+  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$serif-font-family: "PT Serif", ui-serif, Georgia, "STSongti SC", "SimSong", "STSong", "Source Serif Pro", "noto serif", serif;
+$monospace-font-family: ui-monospace, Monaco, Menlo, "SF Mono Regular", "Lucida Console", SFMono-Regular, Consolas, "Courier New", Liberation Mono, monospace;
+
+$base-font-size: 15px !default;
+$base-font-weight: 450 !default;
+
+$base-line-height: 1.5 !default;
+$heavy-font-weight: 600;
+$small-font-size: $base-font-size * 0.875 !default;
+$spacing-unit: 30px !default;
+
+// Color defines
+$dark-color: #222 !default;
+$dark-color-darkmode: #eee !default;
+
+$white-color: #fff !default;
+$white-color-darkmode: #0d0f13 !default;
+
+$grey-color: #e8e8e8 !default;
+$grey-color-darkmode: #14161c !default;
+
+$grey-dark-color: #888888 !default;
+$grey-dark-color-darkmode: #aaaaaa !default;
+
+$blue-color: rgb(21, 108, 207) !default;
+$blue-color-darkmode: rgb(88, 166, 255) !default;
+
+$code-background-color: lighten($dark-color, 83%) !default;
+$code-background-color-darkmode: #ffffff10 !default;
+$code-keyword-color: rgb(0, 119, 255) !default;
+$blockquote-color: #737873 !default;
+$blockquote-color-darkmode: #a8b2bd !default;
+
+// Width of the content area
+$content-width: 1080px !default;
+
+$on-palm: 512px !default;
+$on-laptop: 960px !default;
+
+$nav-height: 64px !default;
+
+// Use media queries like this:
+// @include media-query($on-palm) {
+//   .wrapper {
+//     padding-right: $spacing-unit / 2;
+//     padding-left: $spacing-unit / 2;
+//   }
+// }
+@mixin media-query($device) {
+  @media screen and (max-width: $device) {
+    @content;
+  }
+}
+
+@mixin dark-mode {
+  @media screen and (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin relative-font-size($ratio) {
+  font-size: $base-font-size * $ratio;
+}
+
+// Import partials.
+@import "epozh/base", "epozh/layout", "epozh/syntax-highlighting",
+  "epozh/archives", "epozh/projects", "epozh/toc-sidebar", "epozh/pagination",
+  "epozh/global-search", "epozh/dark-mode", "custom/blog", "custom/cover";

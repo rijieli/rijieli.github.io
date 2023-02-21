@@ -1,0 +1,70 @@
+.notification {
+  position: fixed;
+  bottom: 10px;
+  padding: 14px 20px;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  color: #fff;
+
+  z-index: 999;
+
+  .notification-content {
+    margin: 0;
+    padding: 0;
+
+    a {
+        color: #fff !important;
+    }
+  }
+
+  .notification-date {
+    margin-left: 10px;
+  }
+
+  @media screen and (max-width: 512px) {
+    font-size: 14px;
+    padding: 10px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    border-radius: 0;
+
+    .notification-date {
+      flex-shrink: 0;
+    }
+  }
+
+  &:hover {
+      animation: initial;
+  }
+}
+
+.auto-dismiss {
+  -moz-animation: notification-dismiss-animation 1s ease-in-out 3s forwards;
+  /* Firefox */
+  -webkit-animation: notification-dismiss-animation 1s ease-in-out 3s forwards;
+  /* Safari and Chrome */
+  -o-animation: notification-dismiss-animation 1s ease-in-out 3s forwards;
+  /* Opera */
+  animation: notification-dismiss-animation 1s ease-in-out 3s forwards;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+@keyframes notification-dismiss-animation {
+  to {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes notification-dismiss-animation {
+  to {
+    opacity: 0;
+  }
+}

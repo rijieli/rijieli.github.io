@@ -1,0 +1,107 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+title: Roger Lee
+email: rijie.li@outlook.com
+description: Roger's Homepage
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://roger.zone"
+site_icon_text: ROGER
+author: Roger
+lang: en_US
+twitter:
+  username: rogerleev
+  card: summary
+
+social:
+  name: Roger Lee
+  links:
+    - https://twitter.com/rogerleev
+    - https://github.com/rijieli
+
+# Build settings
+
+timezone: Asia/Shanghai
+
+google_analytics: G-0KQD3KZVDJ
+copyright_text: Roger Lee
+# theme: minima
+
+plugins:
+ - jekyll-feed
+ - jekyll-seo-tag
+
+# generate and show post excerpts
+show_excerpts: true
+
+data_formats:
+  date_format: "%Y-%m-%d %H:%M"
+  date_format_short: "%Y-%m-%d"
+  date_format_formal: "%b %d, %Y %H:%M"
+
+# show future post
+# future: true
+
+# show which page on the navbar
+header_pages:
+   - index.html
+  # - _subpages/archives.html
+  # - _subpages/projects.html
+  # - _subpages/about.html
+
+exclude:
+  - manage.py
+  - CNAME
+  - .gitignore
+  - _manage
+  - Gemfile
+  - Gemfile.lock
+  - .sass-cache/
+  - .jekyll-cache/
+  - README.md
+  - _excludes
+
+include:
+  - _subpages
+
+permalink: /blog/:title/
+
+# Jekyll Paginate Config
+
+# paginate: 10
+# paginate_path: "/blog/:num/"
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

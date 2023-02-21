@@ -1,0 +1,9 @@
+---
+layout: post
+title: {title}
+date: {date}
+categories: Uncategorized
+show_excerpt_image: false
+hidden_post: false
+post_type: Note
+---

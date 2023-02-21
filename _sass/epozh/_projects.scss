@@ -1,0 +1,134 @@
+/**
+ * projects
+ */
+
+.projects-list {
+    display: inline-block; 
+    list-style-type: none;
+    margin: 0px;
+    padding-top: 30px;
+
+    min-height: 90vh;
+  
+    .list-item {
+        float: left; 
+        margin: 10px 5px;
+        margin-bottom: 10px;
+        width: calc(100% / 3 - 10px);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .image-wrapper {
+
+        width: 100%;
+
+        img {
+            height: 120px;
+            width: 100%;
+            object-fit: cover;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        a {
+            width: 100%;
+            position: relative;
+            display: block;
+        }
+    }
+
+    .project-description {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 15px 15px 10px 15px;
+        color: $white-color;
+        overflow: hidden;
+        font-size: 13px;
+        line-height: 1.5;
+        visibility: hidden;
+        opacity: 0;
+        background-color: #00000012;
+        background: rgba(0,0,0, 0.2);
+        background: linear-gradient(0deg, rgba(0,0,0,0.5) 10%, rgba(0,0,0,0) 100%);
+        transition:visibility 0.3s linear,opacity 0.3s linear;
+    }
+
+    .list-item:hover .project-description {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+    @include media-query($on-laptop) {
+        .list-item {
+            width: calc(50% - 20px);
+            margin: 10px;
+        }
+    }
+
+    .project-link {
+        font-size: 14px;
+        padding: 10px 15px;
+        font-weight: 600;
+        width: 100%;
+
+        a {
+            color: $dark-color;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+            word-break: break-all;
+        }
+
+        a:hover {
+            color: $dark-color;
+            text-decoration: none;
+        }
+    
+        .project-link-meta {
+            display: flex;
+            justify-content: space-between;
+            color: $grey-dark-color;
+            margin: 2px 0px 0px 0px;
+            font-size: 14px;
+            font-weight: bold;
+
+            .project-link-meta-visit {
+                display: flex;
+                align-items: center;
+
+                img {
+                    height: 16px;
+                }
+
+                span {
+                    margin-left: 4px;
+                    line-height: normal;
+                }
+            }
+        }
+    }
+
+    @include media-query($on-palm) {
+        .list-item {
+            width: 100%;
+            margin: 0 0 18px 0;
+        }
+
+        .project-header {
+            padding-bottom: 5px;
+        }
+
+        .project-description {
+            display: none;
+        }
+    }
+
+    p {
+        margin: 0px;
+    }
+}

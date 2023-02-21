@@ -1,0 +1,113 @@
+// Wave
+.cover-sample-01 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: repeating-radial-gradient(
+      circle at 0 0,
+      transparent 0,
+      #ffffff 16px
+    ),
+    repeating-linear-gradient(#00000055, #000000);
+}
+
+.cover-sample-02 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: linear-gradient(45deg, #000000 50%, #ffffff 50%);
+  background-size: 20px 20px;
+}
+
+.cover-sample-03 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: linear-gradient(135deg, #000000 25%, transparent 25%),
+    linear-gradient(225deg, #000000 25%, transparent 25%),
+    linear-gradient(45deg, #000000 25%, transparent 25%),
+    linear-gradient(315deg, #000000 25%, #ffffff 25%);
+  background-position: 16px 0, 16px 0, 0 0, 0 0;
+  background-size: 32px 32px;
+  background-repeat: repeat;
+}
+
+.cover-sample-04 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background: linear-gradient(135deg, #00000055 25%, transparent 25%) -16px 0/
+      32px 32px,
+    linear-gradient(225deg, #000000 25%, transparent 25%) -16px 0/ 32px 32px,
+    linear-gradient(315deg, #00000055 25%, transparent 25%) 0px 0/ 32px 32px,
+    linear-gradient(45deg, #000000 25%, #ffffff 25%) 0px 0/ 32px 32px;
+}
+
+.cover-sample-05 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: linear-gradient(
+      30deg,
+      #000000 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #000000 87.5%,
+      #000000
+    ),
+    linear-gradient(
+      150deg,
+      #000000 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #000000 87.5%,
+      #000000
+    ),
+    linear-gradient(
+      30deg,
+      #000000 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #000000 87.5%,
+      #000000
+    ),
+    linear-gradient(
+      150deg,
+      #000000 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #000000 87.5%,
+      #000000
+    ),
+    linear-gradient(
+      60deg,
+      #00000077 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #00000077 75%,
+      #00000077
+    ),
+    linear-gradient(
+      60deg,
+      #00000077 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #00000077 75%,
+      #00000077
+    );
+  background-size: 32px 56px;
+  background-position: 0 0, 0 0, 16px 28px, 16px 28px, 0 0, 16px 28px;
+}
+
+// Polka 1
+.cover-sample-06 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: radial-gradient(#000000 1px, #ffffff 1px);
+  background-size: 20px 20px;
+}
+
+// Ploka 2
+.cover-sample-07 {
+  background-color: #ffffff;
+  opacity: 0.8;
+  background-image: radial-gradient(#000000 1px, transparent 1px),
+    radial-gradient(#000000 1px, #ffffff 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}

@@ -1,0 +1,158 @@
+---
+title: "Safari 15 Theme Color Preview"
+description: Preview theme-color meta tag appearance
+permalink: /theme-color-preview/
+---
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include head_basic.html %}
+    {% assign defaultColor = "#0066FF" %}
+    <link rel="stylesheet" href="{{ "/assets/notification.css" | relative_url }}">
+    <meta name="theme-color" content="{{defaultColor}}">
+    <script src="/assets/tools/external/iro.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, ui-serif, Helvetica, sans-serif;
+            color: #fff;
+            background-color: #0066FF;
+            box-sizing: border-box;
+            margin: 0 15px;
+        }
+
+        #site-title {
+            text-align: center;
+            font-weight: 700;
+            font-size: 30px;
+            margin: 0 15px 30px 15px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 0 60px 0;
+            margin: 20px auto;
+            min-width: 320px;
+            max-width: 860px;
+            border-radius: 16px;
+        }
+
+        .card-background {
+            background: #ffffff30;
+            -webkit-backdrop-filter: saturate(90%) blur(16px);
+            backdrop-filter: saturate(90%) blur(16px);
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px -4px;
+            border: 1px solid #ffffff15;
+        }
+
+        #color-input {
+            width: 80%;
+            height: 18px;
+            border-radius: 10px;
+            border: 1px solid #11111140;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            margin-top: 10px;
+            padding: 10px 5px;
+            max-width: 100px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .code-gen {
+            width: 90%;
+            max-width: 900px;
+            resize: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            margin-top: 10px;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            border: 1px solid #11111140;
+        }
+
+        .code-gen-title {
+            text-align: left;
+            padding-left: 0px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+            margin-top: 20px;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            border: none;
+        }
+
+        #not-safari-notice {
+            background-color: #f7a700;
+            margin: 0;
+            margin-bottom: 10px;
+            width: 100%;
+            line-height: 1.2;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            padding: 5px 0px;
+        }
+
+        @media screen and (max-width: 512px) {
+            body {
+                margin-top: 0;
+            }
+
+            .card-container {
+                margin-top: 0px;
+                padding: 30px 0;
+            }
+
+            #not-safari-notice {
+                font-size: 12px;
+            }
+
+            #site-title {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .code-gen {
+                width: 86%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="card-container card-background">
+        <h1 id="site-title">{{ page.title }}</h1>
+        <h2 id="not-safari-notice">Note: This tool requires Safari 15 or higher version</h2>
+        <div id="color-picker"></div>
+        <input type="text" id="color-input" value="{{defaultColor}}" autocomplete="off">
+
+        <h2 class="code-gen code-gen-title" >Meta Element Code: </h2>
+        
+        <textarea style="margin-bottom: 5px;" class="code-gen" name="code-gen-line1" id="code-gen-line1" cols="30"
+            rows="1" spellcheck="false">
+<meta name="theme-color" content="{{defaultColor}}"></textarea>
+
+        <textarea class="code-gen" name="code-gen-line2" id="code-gen-line2" cols="30" rows="2" spellcheck="false">
+<meta name="theme-color" content="{{defaultColor}}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{defaultColor}}" media="(prefers-color-scheme: dark)"></textarea>
+
+        {%- include tool_scripts.html name="theme-color-preview" -%}
+    </div>
+    <footer style="display: flex; align-items: center; justify-content: center; font-size: 13px; padding: 0;">
+        <div style="margin-right: 10px;">
+            © 2022 Roger Lee.
+        </div>
+
+        {%- if site.email -%}
+        <a style="text-decoration: none; color: #fff !important;" href="mailto:{{ site.email }}">Contact</a>
+        {%- endif -%}
+    </footer>
+</body>
+
+</html>

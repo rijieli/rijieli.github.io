@@ -1,0 +1,55 @@
+---
+layout: default
+permalink: /tags/
+title: Tags
+---
+
+<div class="wrapper">
+    {%- if site.categories.size > 0 -%}
+    {% assign tags = site.categories %}
+
+      <div class="category-group">
+        <div class="category-tag">
+          {% for tag in tags %}
+            {% assign visible_post = tag[1] | where: "hidden_post", false %}
+            {% if visible_post.size > 0 %}
+            <a href="/tags/#{{category[0]}}" title="{{ category[1].size }} posts has this tag">
+                <div># {{ tag[0] }}</div>
+            </a>
+            {% endif %}
+          {% endfor %}
+      </div>
+      </div>
+
+      {% for tag in tags %}
+        {% assign visible_post = tag[1] | where: "hidden_post", false | sort: "date" | reverse %}
+        {% if visible_post.size > 0 %}
+        <div class="category-section category-anchor-float" id="{{ tag[0] }}">
+          <div class="category-section-header">
+            <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                    <path id="category-title-svg" d="M9.5,7 C10.8807119,7 12,8.11928813 12,9.5 C12,10.8807119 10.8807119,12 9.5,12 C8.11928813,12 7,10.8807119 7,9.5 C7,8.11928813 8.11928813,7 9.5,7 Z M2.5,7 C3.88071187,7 5,8.11928813 5,9.5 C5,10.8807119 3.88071187,12 2.5,12 C1.11928813,12 0,10.8807119 0,9.5 C0,8.11928813 1.11928813,7 2.5,7 Z M2.5,0 C3.88071187,0 5,1.11928813 5,2.5 C5,3.88071187 3.88071187,5 2.5,5 C1.11928813,5 0,3.88071187 0,2.5 C0,1.11928813 1.11928813,0 2.5,0 Z M9.5,0 C10.8807119,0 12,1.11928813 12,2.5 C12,3.88071187 10.8807119,5 9.5,5 C8.11928813,5 7,3.88071187 7,2.5 C7,1.11928813 8.11928813,0 9.5,0 Z" fill="#000000"></path>
+                </g>
+            </svg>
+            <h2>{{ tag[0] }}</h2>
+          </div>
+
+          <ul class="category-list">
+            {%- for post in visible_post -%}
+            <li>
+              <div class="category-list-item">
+                {%- assign date_format = site.data_formats.date_format_short | default: "%b %-d, %Y" -%}
+                <p>{{ post.date | date: date_format }}</p>
+                <a href="{{ post.url | relative_url }}" target="_blank">
+                  {{ post.title | escape }}
+                </a>
+              </div>
+            </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {%- endif -%}
+
+</div>

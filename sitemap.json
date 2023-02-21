@@ -1,0 +1,38 @@
+---
+---
+{
+  "Post":[{% for post in site.posts %}
+    {%- if post.hidden_post != true %}
+      {
+        "title": "{{ post.title | escape }}",
+        "category": "{{ post.categories | first }}",
+        "tags": "{{ post.categories | join: ', ' }}",
+        "url": "{{ site.baseurl }}{{ post.url }}",
+        "date": "{{ post.date }}"
+      }{% unless forloop.last %},{% endunless %}
+    {%- endif -%}
+    {%- endfor %}
+  ],
+  "Work": [
+    
+  ],
+  "Project": [{% for project in site.data.projects %}
+    {%- if project.hide != 1 %}
+      {
+        "title": "{{project.title | escape}}",
+        "url": "/projects/#project-{{project.id}}"
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endif -%}
+    {%- endfor %}
+  ],
+  "Tag": [{% for tag in site.categories %}
+    {%- assign visible_post = tag[1] | where: "hidden_post", false -%}
+    {%- if visible_post.size > 0 %}
+      {
+        "title": "{{tag[0] | escape}}",
+        "url": "/tags/#{{tag[0]}}"
+      }{%- unless forloop.last -%}, {% endunless %}
+    {%- endif -%}
+    {%- endfor %}
+  ]
+}

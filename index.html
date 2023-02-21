@@ -1,0 +1,35 @@
+---
+layout: default
+nav_title: Projects
+nav_item: 1
+---
+<div class="wrapper">
+    <ol class="projects-list">
+        {% for item in site.data.projects %}
+        {% if item.hide != "1" %}
+        <li class="list-item blog-card-shadow" id="project-{{item.id}}">
+            <div class="image-wrapper">
+                <a href="{{ item.url }}" target="_blank">
+                    <img src="{{ item.img_path }}" alt="{{item.desc}}" loading="lazy">
+                    <div class="project-description">
+                        {{item.desc}}
+                    </div>
+                </a>
+            </div>
+            <div class="project-link">
+                <a href="{{ item.url }}" target="_blank">{{item.title}}</a>
+                {% if true == false %}
+                <div class="project-link-meta">
+                    <div class="project-link-meta-visit">
+                        {% assign project_lang = item.lang | downcase %}
+                        <img src="{{ "/assets/img/lang_icon/lang-"| append: project_lang | append: ".svg" | relative_url }}" alt="{{ item.lang }}">
+                        <span>{{ item.lang }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</div>

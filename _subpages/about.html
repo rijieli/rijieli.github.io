@@ -1,0 +1,28 @@
+---
+layout: default
+title: About
+nav_item: 4
+permalink: /about/
+---
+
+<div class="wrapper">
+    <div class="about">
+        <h1>Roger Lee</h1>
+        <p>Software engineer and coffee lover.</p>
+        <p>Thinking uses ideas and technology to fasten the flow of information, substances, and relationships in the real world.</p>
+        <p>Creating products which can bring happiness and inner peace to all people.</p>
+        <p>Learn to be an author.</p>
+        <ul class="about-sns-list">
+            {% for platform in site.data.archives_category %}
+            {% if platform.url != nil and platform.show == 'TRUE' %}
+            <li>
+                <a href="{{ platform.url | relative_url }}" target="_blank">
+                    <img src="{{ "/assets/img/sns_icon/"| append: platform.platform | append: "-round.svg" | relative_url }}"
+                        alt=""> {{ platform.name }}
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

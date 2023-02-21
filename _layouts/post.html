@@ -1,0 +1,85 @@
+---
+layout: default
+---
+{% if page.cover_image %}
+<img class="post-cover" src="{{ page.cover_image }}.jpg" alt="{{ page.title }}">
+{% endif %}
+
+<div class="wrapper">
+  <article itemscope itemtype="http://schema.org/BlogPosting">
+
+    
+    {% if page.cover_image %}
+    {% assign centered_title=" post-centered-item" %}
+    {% endif %}
+
+    <h1 class="post-title {{centered_title}}" itemprop="name headline">{{ page.title | escape }}</h1>
+    <div class="post-meta {{centered_title}}">
+
+      
+      <span class="post-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        {% if page.author %}
+        <span class="p-author h-card" itemprop="name">{{ page.author }}</span>
+        {% else %}
+        <a class="p-author h-card" itemprop="name" href="/">Roger Lee</a>
+        {% endif %}
+      </span>
+
+      <span class="post-date" style="width: 8px; text-align: center;" aria-hidden="true">·</span>
+
+      <time class="post-date" class="dt-published" datetime="{{ page.date | date_to_xmlschema }}"
+      itemprop="datePublished">
+        {{ page.date | date: site.data_formats.date_format_formal }}
+      </time>
+    </div>
+
+    <div class="post-content e-content" itemprop="articleBody">
+      {{ content }}
+    </div>
+    <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+  </article>
+  
+  <div class="post-tag">
+    {% if page.categories.size > 0 %}
+    <div class="category-tag">
+      {% for tag in page.categories %}
+      <a href="/tags/#{{tag}}">
+          <div># {{ tag | strip }}</div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <hr class="post-hr">
+
+  {%- include disqus_comments.html -%}
+
+  <div class="post-image-viewer">
+    <div class="image-viewer-wrapper">
+      <img src="">
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+  let toc_item_count = document.querySelectorAll(".toc-sidebar-item").length
+  
+  if(toc_item_count < 2) {
+    if(document.querySelector("#sidebar") != null) {
+      document.querySelector("#sidebar").remove()
+    }
+  }
+
+  let imgDom = document.querySelector(".post-image-viewer");
+  document.querySelectorAll(".post-content img").forEach(e => e.addEventListener("click", showImage))
+  imgDom.addEventListener("click", e => imgDom.style.display = "none");
+
+  function showImage(evt) {
+    let imgDomImage = document.querySelector(".post-image-viewer img");
+    imgDomImage.src = evt.target.src;
+    imgDom.style.display = "block";
+  }
+</script>

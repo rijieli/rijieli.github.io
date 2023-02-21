@@ -1,0 +1,201 @@
+/**
+ * Archives
+ */
+
+.archives-list {
+    display: block; 
+    list-style-type: none;
+    margin: 0px;
+    overflow: hidden;
+    padding-top: 30px;
+
+    .no-url {
+        cursor: not-allowed;
+    }
+  
+    .list-item {
+        box-shadow: 0 1px 3px 0 rgba(18,18,18,.1);
+        border-radius: 8px;
+        display: block;
+        float: left; 
+        margin: 10px;
+        margin-bottom: 10px;
+        width: calc(33.33% - 20px);
+        position: relative;
+    }
+
+    .work-data {
+        opacity: 0;
+        transition-delay: .1s;
+        color:white; 
+        padding: 0px 10px 10px 10px;
+        display: flex; position: 
+        absolute; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        justify-content: space-between;
+        font-size: 14px;
+    }
+
+    .image-wrapper {
+        height: 160px;
+        position: relative;
+
+        img {
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+            object-position: top left;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+    }
+
+    .image-wrapper::before {
+        opacity: 0;
+        transition-delay: .1s;
+    }
+
+    .image-wrapper:hover {
+        .work-data {
+            opacity: 1;
+            transition: opacity .2s;
+        }
+    }
+
+    .image-wrapper:hover::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        pointer-events: none;
+        opacity: 1;
+        background: linear-gradient(to top,rgba(0,0,0,0.5) 0%,transparent 100%);
+        transition: opacity .2s;
+    }
+    
+    .work-link {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        font-size: 15px;
+
+        a {
+            color: $blue-color;
+            letter-spacing: 0;
+            text-align: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+            font-weight: $heavy-font-weight;
+        }
+
+        a:hover {
+            color: $dark-color;
+            text-decoration: none;
+        }
+    
+        .work-link-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            margin-top: 4px;
+            font-size: 15px;
+        }
+
+        .work-link-meta-platform {
+
+            display: flex;
+            align-items: center;
+
+            img {
+                height: 16px;
+                margin: 0;
+                margin-right: 5px;
+            }
+            
+        }
+
+        .work-link-meta-visit {
+
+            display: flex;
+            align-items: center;
+
+            img {
+                width: 18px;
+                margin: 0;
+                margin-right: 5px;
+            }
+            
+        }
+    }
+  
+    @include media-query($on-laptop) {
+        .list-item {
+        margin-left: 5px;
+        margin-right: 5px;
+        width: calc(50% - 10px);
+        }
+    }
+
+    @include media-query($on-palm) {
+        .list-item {
+        width: 98%;
+        margin: 0px 1% 15px 1%;
+        }
+    }
+
+    p {
+        margin: 0px;
+    }
+}
+  
+.archives-filter {
+    text-align: center; 
+    height: 50px;
+    margin:0px;
+    background-color: $grey-color;
+    color: #7a7a7a;
+
+    a {
+        color: #7a7a7a;
+        text-decoration: none;
+    }
+
+    .archives-cate-highlight {
+        color: $blue-color;
+        font-weight: bold;
+    }
+
+    .archives-filter-list {
+        display: inline; 
+        line-height: 50px; 
+        margin: 0;
+    }
+
+    .archives-filter-item {
+        list-style: none; 
+        display: inline; 
+        margin-right: 10px; 
+        font-size: 15px; 
+        text-align: center;
+    }
+
+    .archives-filter-item:last-child {
+        margin-right: 0px;
+    }
+}
+
+@include media-query($on-palm) {
+    .archives-filter {
+        height: 50px;
+        .archives-filter-list {
+            line-height: 50px;
+        }
+    }
+}
+  

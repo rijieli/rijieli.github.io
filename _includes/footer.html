@@ -1,0 +1,20 @@
+<footer class="footer">
+  <div class="footer-item-list wrapper">
+    <div class="footer-item">
+      © 2023 {{ site.copyright_text }}
+    </div>
+    <div class="footer-links">
+      <div class="footer-item">
+        <a href="{{ "/feed.xml" | relative_url }}" class="footer-link">RSS</a></li>
+      </div>
+      <div class="footer-item">
+        <a class="footer-link" href="https://apps.apple.com/developer/id1626398328">Apps</a>
+      </div>
+      <div class="footer-item">
+        {%- if site.email -%}
+        <a class="footer-link" href="mailto:{{ site.email }}">Contact</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
