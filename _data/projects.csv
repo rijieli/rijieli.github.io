@@ -8,4 +8,4 @@ id,title,hide,desc,img_path,url,platform,lang,date,visit
 120,Bookmark Duplicate Finder,0,Chrome plugin for locate duplicated bookmarks.,/assets/img/projects/duplicate-cleaner.jpg,https://github.com/rijieli/chrome-bookmark-cleaner,weixin,JavaScript,2019/1/3,2862
 122,Snow Simulation,0,"Snow simulation in browser, using HTML Canvas.",/assets/img/projects/snow-simulation.jpg,/snow/,,JavaScript,2021/12/24,
 130,Shopify Tool,0,Tools for Shopify operation.,/assets/img/projects/lizhiscript.jpg,https://github.com/rijieli/lizhiscript,github,Python,,
-140,MD Formater,0,Modify Markdown document to adjust different publishing platform.,/assets/img/projects/md-formater.jpg,https://github.com/rijieli/md-formater,weixin,Python,2019/1/7,2862
+140,MD Formatter,0,Modify Markdown document to adjust different publishing platform.,/assets/img/projects/md-formater.jpg,https://github.com/rijieli/md-formater,weixin,Python,2019/1/7,2862
