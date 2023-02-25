@@ -6,6 +6,7 @@
     justify-content: space-between;
     border-bottom: 1px solid $grey-color;
     padding: 8px 0;
+    cursor: pointer;
 
     @include dark-mode {
         color: $dark-color-darkmode;
@@ -13,11 +14,12 @@
     }
 
     .projects-title {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 17px;
+        font-weight: 650;
         margin: 0;
         padding: 0;
         line-height: 1;
+        line-height: 24px;
         
         color: $dark-color;
     
@@ -29,7 +31,11 @@
     .projects-fold {
         background-color: transparent;
         border: none;
-        cursor: pointer;
+        height: 24px;
+        width: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: transform .5s;
 
         path {

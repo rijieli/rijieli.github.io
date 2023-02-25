@@ -250,7 +250,8 @@
 
   /* ============================================================================ */
   // MARK: get search document
-  let foldButton = document.getElementById("projects-fold");
+  let foldButton = document.querySelector(".projects-section");
+  let foldChevron = document.getElementById("projects-fold");
   let projectsListContainer = document.querySelector(
     ".projects-list-container"
   );
@@ -258,11 +259,11 @@
   foldButton?.addEventListener("click", function () {
     if (projectsListContainer.clientHeight) {
       projectsListContainer.style.height = 0;
-      foldButton.classList.remove("rotate");
+      foldChevron.classList.remove("rotate");
     } else {
       projectsListContainer.style.height =
         projectsList.clientHeight + 56 + "px";
-      foldButton.classList.add("rotate");
+      foldChevron.classList.add("rotate");
     }
   });
 })();
