@@ -13,7 +13,6 @@ Usage: ./manage.py [-cgv] [input]
 
 import csv, datetime, os, sys, re
 import shutil
-from _manage.weixindata import write_csv
 from _manage.tools import read_file, get_current_date, uglify_tools_script
 
 POST_PATH = os.getcwd() + "/_posts/"
@@ -172,4 +171,5 @@ if __name__ == "__main__":
     elif (system_args[1] == "-m"):
         modify_post(system_args[2])
     elif (system_args[1] == "-wd"):
+        from _manage.weixindata import write_csv
         write_csv()

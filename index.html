@@ -1,67 +1,29 @@
 ---
 layout: default
-nav_title: Home
-nav_item: 1
+title: Blog
 ---
-<div class="wrapper">
 
-    <div class="about">
-        <p><b>Hello!</b></p>
-        <p>I'm Roger Lee. A software engineer and coffee lover.</p>
-        <p>Currently, I'm working on iOS development and creating products that bring happiness and inner peace to people.</p>
-        <p>Learn to be an author.</p>
-        <ul class="about-sns-list">
-            {% for platform in site.data.archives_category %}
-            {% if platform.url != nil and platform.show == 'TRUE' %}
-            <li>
-                <a href="{{ platform.url | relative_url }}" target="_blank">
-                    <img src="{{ "/assets/img/sns_icon/"| append: platform.platform | append: "-round.svg" | relative_url }}"
-                        alt="">
-                </a>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div class="projects-section">
-        <h2 class="projects-title" id="projects">Projects</h2>
-        <div class="projects-fold" id="projects-fold">
-            <svg t="1677296318017" class="icon" viewBox="0 0 1024 1024" version="1.1"
-            xmlns="http://www.w3.org/2000/svg" p-id="3554" width="16" height="16">
-            <path d="M213.333333 128l130.432-128L853.333333 512 343.765333 1024 213.333333 896l384-384z"
-                p-id="3555"></path>
-            </svg>
+<div class="wrapper blog">
+    {%- if paginator.posts.size > 0 -%}
+    <ul class="post-list-plain">
+      <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
+      {%- for post in paginator.posts -%}
+      {%- if post.hidden_post != true -%}
+      <li class="list-item">
+        {%- assign date_format = "%b %-d, %Y" -%}
+        <p class="item-date">{{ post.date | date: date_format }}</p>
+        <div class="item-info">
+          <a class="item-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+          <p class="post-excerpt">{{ post.excerpt | strip_html }}</p>
         </div>
-    </div>
-    <div class="projects-list-container">
-        <ol class="projects-list">
-            {% for item in site.data.projects %}
-            {% if item.hide != "1" %}
-            <li class="list-item blog-card-shadow" id="project-{{item.id}}">
-                <div class="image-wrapper">
-                    <a href="{{ item.url }}" target="_blank">
-                        <img src="{{ item.img_path }}" alt="{{item.desc}}" loading="lazy">
-                        <div class="project-description">
-                            {{item.desc}}
-                        </div>
-                    </a>
-                </div>
-                <div class="project-link">
-                    <a href="{{ item.url }}" target="_blank">{{item.title}}</a>
-                    {% if true == false %}
-                    <div class="project-link-meta">
-                        <div class="project-link-meta-visit">
-                            {% assign project_lang = item.lang | downcase %}
-                            <img src="{{ "/assets/img/lang_icon/lang-"| append: project_lang | append: ".svg" | relative_url }}" alt="{{ item.lang }}">
-                            <span>{{ item.lang }}</span>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </li>
-            {% endif %}
-            {% endfor %}
-        </ol>
-    </div>
+      </li>
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+    {%- else - %}
+    <h2>No Posts Available.</h2>
+    {%- endif -%}
+    {% include pagination.html %}
 </div>

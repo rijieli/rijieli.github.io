@@ -1,8 +1,7 @@
 ---
 layout: default
-nav_item: 2
 title: Blog
-permalink: /blog/
+permalink: /landing/
 ---
 
 <div class="wrapper blog">
@@ -22,7 +21,7 @@ permalink: /blog/
       </div>
       <div class="headline-info">
         <div class="headline-tag">
-          LATEST {{ headline.post_type | default: "Note" | upcase }}
+          LATEST {{ headline.post_type | default: "" | upcase }}
         </div>
         <a class="headline-title" href="{{ headline.url | relative_url }}">{{ headline.title }}</a>
         <div class="headline-date">{{ headline.date | date: site.data_formats.date_format_formal}}</div>
@@ -47,7 +46,7 @@ permalink: /blog/
           </a>
           {%- assign date_format = site.data_formats.date_format_formal | default: "%b %-d, %Y" -%}
           <p class="item-meta"><span class="item-date">{{ post.date | date: date_format }}</span>
-            <span class="item-type"> {{ post.post_type | default: "Note" | upcase }} </span>
+            <span class="item-type"> {{ post.post_type | default: "" | upcase }} </span>
           </p>
         </div>
       </li>

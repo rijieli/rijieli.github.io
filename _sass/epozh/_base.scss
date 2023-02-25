@@ -216,15 +216,10 @@ pre {
   margin-left: auto;
   @extend %clearfix;
 
-  @include media-query($on-laptop) {
-    padding-right: $spacing-unit;
-    padding-left: $spacing-unit;
-  }
-
   @include media-query($on-palm) {
     max-width: 100%;
-    padding-left: $spacing-unit / 3 * 2;
-    padding-right: $spacing-unit / 3 * 2;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
@@ -268,7 +263,11 @@ table {
 
   th,
   td {
-    padding: ($spacing-unit / 3) ($spacing-unit / 2);
+    padding: 8px;
+
+    img {
+      max-width: 100%;
+    }
   }
   th {
     border: 1px solid darken($grey-color, 4%);

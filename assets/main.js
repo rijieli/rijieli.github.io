@@ -250,7 +250,7 @@
 
   /* ============================================================================ */
   // MARK: get search document
-  let foldButton = document.querySelector(".projects-section");
+  let foldButton = document.querySelector(".projects-section-button");
   let foldChevron = document.getElementById("projects-fold");
   let projectsListContainer = document.querySelector(
     ".projects-list-container"

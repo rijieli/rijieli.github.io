@@ -2,7 +2,7 @@
 layout: default
 ---
 {% if page.cover_image %}
-<img class="post-cover" src="{{ page.cover_image }}.jpg" alt="{{ page.title }}">
+<!-- <img class="post-cover" src="{{ page.cover_image }}.jpg" alt="{{ page.title }}"> -->
 {% endif %}
 
 <div class="wrapper">
@@ -10,22 +10,17 @@ layout: default
 
     
     {% if page.cover_image %}
-    {% assign centered_title=" post-centered-item" %}
+    {% assign centered_title=" post-centered-itemd" %}
     {% endif %}
 
     <h1 class="post-title {{centered_title}}" itemprop="name headline">{{ page.title | escape }}</h1>
     <div class="post-meta {{centered_title}}">
 
-      
+      {% if page.author %}
       <span class="post-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        {% if page.author %}
         <span class="p-author h-card" itemprop="name">{{ page.author }}</span>
-        {% else %}
-        <a class="p-author h-card" itemprop="name" href="/">Roger Lee</a>
-        {% endif %}
       </span>
-
-      <span class="post-date" style="width: 8px; text-align: center;" aria-hidden="true">·</span>
+      {% endif %}
 
       <time class="post-date" class="dt-published" datetime="{{ page.date | date_to_xmlschema }}"
       itemprop="datePublished">

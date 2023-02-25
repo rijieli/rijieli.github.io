@@ -390,7 +390,7 @@
 }
 
 .post-title {
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1.5;
   font-weight: bold;
   margin: 30px 0 0 0;
@@ -416,7 +416,7 @@
     color: $grey-dark-color;
     margin: 5px 0 30px 0;
     display: block;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
 
     a {
@@ -435,8 +435,10 @@
 
 .post-content {
   margin-bottom: 20px;
-  line-height: 32px;
+  line-height: 30px;
   font-weight: normal;
+
+  font-size: 16px;
 
   h1,
   h2,
@@ -458,7 +460,6 @@
     color: $dark-color;
     word-break: normal;
     overflow-wrap: anywhere;
-    font-size: 17px;
   }
 
   blockquote p {
@@ -487,6 +488,7 @@
     -ms-transition: all ease-in 0.5s;
     -o-transition: all ease-in 0.5s;
     display: inherit;
+    margin: 8px 0px;
   }
 
   img:hover {
@@ -521,6 +523,10 @@
     p {
       margin-bottom: 20px;
     }
+  }
+
+  li a {
+    word-break: break-all;
   }
 
   ol {

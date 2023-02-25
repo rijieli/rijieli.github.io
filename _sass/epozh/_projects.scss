@@ -6,7 +6,7 @@
     justify-content: space-between;
     border-bottom: 1px solid $grey-color;
     padding: 8px 0;
-    cursor: pointer;
+    // cursor: pointer;
 
     @include dark-mode {
         color: $dark-color-darkmode;
@@ -29,6 +29,7 @@
     }
 
     .projects-fold {
+        display: none !important;
         background-color: transparent;
         border: none;
         height: 24px;
@@ -54,9 +55,9 @@
 }
 
 .projects-list-container {
-    height: 0;
+    // height: 0;
     transition: height 0.5s ease-in;
-    overflow: hidden;
+    // overflow: hidden;
 
     @include media-query($on-palm) {
         transition: height 1s;
