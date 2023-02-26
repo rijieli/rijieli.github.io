@@ -47,6 +47,7 @@ copyright_text: Roger Lee
 plugins:
  - jekyll-feed
  - jekyll-seo-tag
+ - jekyll-paginate
 
 # generate and show post excerpts
 show_excerpts: true
@@ -58,13 +59,6 @@ data_formats:
 
 # show future post
 # future: true
-
-# show which page on the navbar
-header_pages:
-   - index.html
-  # - _subpages/archives.html
-  # - _subpages/projects.html
-  # - _subpages/about.html
 
 exclude:
   - manage.py
@@ -81,12 +75,12 @@ exclude:
 include:
   - _subpages
 
-permalink: /blog/:title/
+permalink: /post/:title/
 
 # Jekyll Paginate Config
 
-# paginate: 10
-# paginate_path: "/blog/:num/"
+paginate: 8
+paginate_path: "/blog/page:num/"
 
 # Exclude from processing.
 # The following items will not be processed, by default.

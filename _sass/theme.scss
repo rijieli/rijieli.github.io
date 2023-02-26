@@ -75,6 +75,6 @@ $nav-height: 64px !default;
 }
 
 // Import partials.
-@import "epozh/base", "epozh/layout", "epozh/syntax-highlighting",
+@import "epozh/layout", "epozh/base", "epozh/syntax-highlighting",
   "epozh/archives", "epozh/projects", "epozh/toc-sidebar", "epozh/pagination",
   "epozh/global-search", "epozh/dark-mode", "custom/blog", "custom/cover";
