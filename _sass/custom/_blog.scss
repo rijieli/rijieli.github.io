@@ -134,10 +134,12 @@
       }
 
       .item-date {
-        width: 120px;
-        font-size: 15px;
+        width: 110px;
+        font-size: 14px;
         margin: 0;
         flex-shrink: 0;
+        font-weight: 500;
+        color: $grey-dark-color;
       }
     }
 
@@ -146,7 +148,12 @@
         padding: 0;
         margin: 0;
         font-weight: 400;
+        color: $dark-color;
         font-size: 15px;
+
+        @include dark-mode {
+          color: $grey-dark-color;
+        }
       }
     }
 
