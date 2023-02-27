@@ -10,7 +10,7 @@ title: Blog
       {%- for post in paginator.posts -%}
       {%- if post.hidden_post != true -%}
       <li class="list-item">
-        {%- assign date_format = "%b %-d, %Y" -%}
+        {%- assign date_format = "%b %d, %Y" -%}
         <p class="item-date">{{ post.date | date: date_format }}</p>
         <div class="item-info">
           <a class="item-link" href="{{ post.url | relative_url }}">
