@@ -1,13 +1,16 @@
 ---
 layout: post
 title: 通过指定 Unicode 范围裁剪 TTF 字体文件
-date: 2022-04-14 15:18:59 +0800
+date: 2023-07-26 00:00:00 +0800
+original_date: 2022-04-14 15:18:59 +0800
 categories: Python
 show_excerpt_image: false
 hidden_post: false
 post_type: Note
 cover_image: /assets/posts/reduce-ttf-font-file-size-using-python/TTF
 ---
+
+> 更新：23/07/26 补充一个实用小脚本
 
 最近尝试为博客添加自定义字体，以在不同的浏览器上实现视觉一致性。你可能已经了解了 `@font-face` 这个 CSS 属性：
 
@@ -45,6 +48,30 @@ pyftsubset Input.ttf --output-file=Output.ttf --unicodes=U+0000-007F
 ```
 Input.ttf   162K
 Output.ttf   22K
+```
+
+## 一个实用的小脚本（2023.07.26更新）
+
+分享一个小脚本，要求已经安装`fonttools`，运行后会产生一个 ASCII 子集的新文件，文件名结尾加`-sub`
+
+用法举例：`./subascii.sh Rubik.ttf` 得到 `Rubik-sub.ttf`
+
+下面的保存为`subascii.sh`
+
+```
+#!/bin/bash
+
+if [[ $# -lt 1 || !($1 == *.otf || $1 == *.ttf) ]]; then
+  echo "Use VENV: source ./env/bin/activate"
+  echo "Usage: subascii <fontfile.otf/ttf> [pyftsubset options...]"
+  exit 1
+fi
+
+filename=$(basename -- "$1")
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+pyftsubset "$1" --output-file="${filename}-sub.${extension}" --unicodes=U+0000-007F "${@:2}"
 ```
 
 ## 在哪里找到字体文件？
