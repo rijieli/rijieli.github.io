@@ -275,6 +275,10 @@
     copyButton.addEventListener("click", () => {
       let code = item.querySelector("code");
       navigator.clipboard.writeText(code.innerText);
+      copyButton.innerText = "Copied";
+      setTimeout(() => {
+        copyButton.innerText = "Copy";
+      }, 1000)
     });
     item.parentElement.appendChild(copyButton);
   })
