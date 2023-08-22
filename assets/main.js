@@ -266,4 +266,16 @@
       foldChevron.classList.add("rotate");
     }
   });
+  
+  let codeItems = document.querySelectorAll("div.post-content > div > div > .highlight");
+  codeItems.forEach((item) => {
+    let copyButton = document.createElement("button");
+    copyButton.classList.add("copy-button");
+    copyButton.innerText = "Copy";
+    copyButton.addEventListener("click", () => {
+      let code = item.querySelector("code");
+      navigator.clipboard.writeText(code.innerText);
+    });
+    item.parentElement.appendChild(copyButton);
+  })
 })();
