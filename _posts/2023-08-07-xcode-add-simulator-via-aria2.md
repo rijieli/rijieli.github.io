@@ -2,7 +2,7 @@
 layout: post
 title: Xcode 通过 aria2 安装模拟器
 date: 2023-08-07 14:14:58 +0800
-categories: Uncategorized
+categories: 工具 Xcode
 show_excerpt_image: false
 hidden_post: false
 post_type: Note
@@ -36,9 +36,15 @@ aria2c --header "Cookie: ADCDownloadAuth={Cookies}" -c https://download.develope
 
 `--header`: 添加请求头以通过验证
 
+## 生成脚本
+
+填写好 Cookies 和下载链接，然后点击下方按钮生成脚本，复制到 Terminal 执行即可。
+
+{% include xcode_aria2.html %}
+
 ## 安装
 
-安装同样是一组命令，官方教程在 [Command Line](https://developer.apple.com/documentation/xcode/installing-additional-simulator-runtimes#Install-and-manage-Simulator-runtimes-from-the-command-line)。精简一下就是下方这三行。
+安装同样是一组命令，官方教程在 [Command Line](https://developer.apple.com/documentation/xcode/installing-additional-simulator-runtimes#Install-and-manage-Simulator-runtimes-from-the-command-line)。精简一下就是下方这三行命令。通常情况下直接执行最后一条即可。
 
 ```bash
 sudo xcode-select -s /Applications/Xcode-15.0.0-Beta.5.app

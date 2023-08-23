@@ -276,9 +276,11 @@
       let code = item.querySelector("code");
       navigator.clipboard.writeText(code.innerText);
       copyButton.innerText = "Copied";
+      copyButton.classList.add("copied")
       setTimeout(() => {
         copyButton.innerText = "Copy";
-      }, 1000)
+        copyButton.classList.remove("copied")
+      }, 1500)
     });
     item.parentElement.appendChild(copyButton);
   })

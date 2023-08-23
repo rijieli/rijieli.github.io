@@ -1,0 +1,65 @@
+<style>
+    #generator {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #generator form {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #generator form .form-group {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #generator form .form-group label {
+        width: 100%;
+        margin: 0 auto;
+        font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    #generator form .form-group textarea {
+        width: 100%;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 8px;
+        resize: vertical;
+    }
+</style>
+
+<div id="generator">
+    <button type="button" class="copy-button" onclick="generateAndCopy()">生成并复制</button>
+    <form>
+        <div class="form-group">
+            <label for="cookies">Cookies</label>
+            <textarea class="form-control" id="cookies" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="url">URL</label>
+            <!-- textarea -->
+            <textarea class="form-control" id="url" rows="3"></textarea>
+        </div>
+    </form>
+</div>
+
+<script>
+    function generateAndCopy() {
+        var cookies = document.getElementById("cookies").value;
+
+        // save cookie to local storage
+        localStorage.setItem("xcdownloadCookies", cookies);
+
+        var url = document.getElementById("url").value;
+        var command = `aria2c --header "Cookie: ADCDownloadAuth={Cookies}" -c {URL}`.replace("{Cookies}", cookies).replace("{URL}", url);
+        navigator.clipboard.writeText(command);
+    }
+
+    // load cookie from local storage
+    var cookies = localStorage.getItem("xcdownloadCookies");
+    if (cookies != null) {
+        document.getElementById("cookies").value = cookies;
+    }
+</script>
