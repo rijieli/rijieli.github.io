@@ -29,12 +29,12 @@
       BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Microsoft YaHei", sans-serif;
     margin: 0;
     display: block;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
     -webkit-font-smoothing: antialiased;
     line-height: $nav-height;
     color: $dark-color;
-    letter-spacing: 0px;
+    letter-spacing: -0.4px;
     min-width: 80px;
 
     &:hover {
@@ -63,6 +63,32 @@
 
     .nav-link:not(:last-child) {
       margin-right: 16px;
+    }
+
+
+    .nav-about {
+      width: 20px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .nav-about-dot {
+        display: inline-block;
+        width: 20px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: $dark-color;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+      }
+
+      @include dark-mode {
+        & .nav-about-dot {
+          background-color: $dark-color-darkmode !important;
+        }
+      }
     }
 
     .nav-link {
@@ -828,7 +854,7 @@
 
 .about {
   margin-top: 30px;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .about p {
@@ -837,41 +863,24 @@
 }
 
 .about-sns-list {
-  list-style: none;
-  background: $dark-color;
   margin: 24px 0 24px 0;
-  padding: 18px 24px;
-  font-weight: 600;
-  display: flex;
   column-gap: 24px;
+  padding-left: 12px;
 
   @include media-query($on-palm) {
     justify-content: space-between;
   }
 
   a {
-    color: #fff;
-    display: flex;
     align-items: center;
     text-decoration: none;
   }
 
-  a:visited {
-    color: #fff;
-  }
-
   li {
     margin: 0px;
-    display: flex;
-    justify-content: center;
-
+    padding: 4px 0;
     @include media-query($on-palm) {
       flex-basis: 100%;
     }
-  }
-
-  img {
-    height: 26px;
-    margin: 0;
   }
 }

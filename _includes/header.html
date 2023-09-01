@@ -10,25 +10,9 @@
       </a>
 
       <div class="nav-items">
-        {% assign sorted_pages = site.pages | sort:"nav_item" %}
-        {%- for nav_page in sorted_pages -%}
-
-          {%- if nav_page.nav_item -%}
-        
-          {% assign active_tag = ' ' %}
-          {%- if nav_page.nav_item == page.nav_item -%}
-          {% assign active_tag = 'active' %}
-          {%- endif -%}
-
-          {% if nav_page.nav_item == 2 and page.layout == 'post' %}
-          {% assign active_tag = 'active' %}
-          {%- endif -%}
-          
-          <a class="nav-link {{active_tag}}"
-            href="{{ nav_page.url | relative_url }}">{{ nav_page.nav_title | default: nav_page.title | escape }}</a>
-          {%- endif -%}
-        
-        {%- endfor -%}
+        <a href="/about/" class="nav-about">
+          <div class="nav-about-dot"></div>
+        </a>
       </div>
   
       
