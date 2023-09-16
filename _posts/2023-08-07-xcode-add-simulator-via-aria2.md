@@ -8,21 +8,21 @@ hidden_post: false
 post_type: Note
 ---
 
-Xcode 15 一个重大的改动是不再内置模拟器，而是通过增量安装。好处是节省空间，但自带的下载器速度很慢，而且没有断点续传，下载过程出现网络波动，中断需要从头开始下载。用 aria2 下载非常适合这个场景。
+Xcode 15 不再内置 iOS 模拟器，改为按需要增量安装。但这项改动带来新的问题：内置的模拟器下载工具速度很慢，而且没有断点续传。下载过程一旦因为网络波动而中断，需要从零重新开始下载。用 aria2 下载非常适合这个场景。
 
-**⚠️下面的内容需要你拥有开发者账号权限**
+**⚠️ 以下内容需要你拥有开发者账号权限**
 
-> aria2 官方没有提供 macOS 客户端，如果不想自己编译可以通过 Homebrew 安装
+> aria2 官方未提供 macOS 版本，如果不想自己编译可以通过 [Homebrew](https://formulae.brew.sh/formula/aria2) 安装
 
 ## 寻找下载链接
 
-常见的下载链接如下面所示，可以在开发者官网 [More](https://developer.apple.com/download/all/?q=visionos) 这个页面搜索得到。
+常见的链接结构如下面所示，在开发者官网 [More](https://developer.apple.com/download/all/?q=visionos) 页面搜索得到。
 
 https://download.developer.apple.com/Developer_Tools/iOS_17_beta_4_Simulator_Runtime/iOS_17_beta_4_Simulator_Runtime.dmg
 
 ## 获取 Cookies
 
-官网提供的下载链接是无法直接下载，需要验证开发者账号权限，不过方式比较简单，在官网登录账号，然后浏览器打开 Cookies 窗口，寻找 `ADCDownloadAuth` 这个值。
+官网提供的下载链接无法直接下载，需要验证开发者账号权限，好在方式比较简单。登录自己的开发者账号，然后通过浏览器开发者面板 Cookies 窗口，寻找 `ADCDownloadAuth` 这个值。
 
 ## 下载
 
@@ -42,9 +42,9 @@ aria2c --header "Cookie: ADCDownloadAuth={Cookies}" -c https://download.develope
 
 {% include xcode_aria2.html %}
 
-## 安装
+## 安装模拟器
 
-安装同样是一组命令，官方教程在 [Command Line](https://developer.apple.com/documentation/xcode/installing-additional-simulator-runtimes#Install-and-manage-Simulator-runtimes-from-the-command-line)。精简一下就是下方这三行命令。通常情况下直接执行最后一条即可。
+安装包含一组命令，官方教程链接为 [Command Line](https://developer.apple.com/documentation/xcode/installing-additional-simulator-runtimes#Install-and-manage-Simulator-runtimes-from-the-command-line)。精简官方教程得到下方三行命令，通常情况下执行最后一条等待 Xcode 安装和验证模拟器。
 
 ```bash
 sudo xcode-select -s /Applications/Xcode-15.0.0-Beta.5.app

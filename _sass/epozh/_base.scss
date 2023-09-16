@@ -154,12 +154,10 @@ a {
  */
 blockquote {
   color: $grey-color;
-  border: 2px solid $grey-dark-color;
-  border-radius: 8px;
-  @include relative-font-size(1);
+  border-left: 4px solid $grey-dark-color;
+  font-size: 16px;
   letter-spacing: 0px;
-  padding: 12px;
-  box-shadow: 0 4px 0 $grey-dark-color;
+  padding: 2px 8px;
   > :last-child {
     margin-bottom: 0;
   }
