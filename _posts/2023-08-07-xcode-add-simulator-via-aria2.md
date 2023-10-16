@@ -51,3 +51,11 @@ sudo xcode-select -s /Applications/Xcode-15.0.0-Beta.5.app
 xcodebuild -runFirstLaunch
 xcrun simctl runtime add iOS_17_beta_4_Simulator_Runtime.dmg
 ```
+
+## 补充
+
+Apple 开发者官网提供了一份 JSON 文档，这份文档包含了所有可用的下载链接，包括 Xcode、模拟器、文档等等。地址为：
+
+https://developer.apple.com/services-account/QH65B2/downloadws/listDownloads.action
+
+链接需认证，具体方法可以研究官方网站的请求，这里不再赘述。
