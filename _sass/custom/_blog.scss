@@ -74,10 +74,6 @@
           font-size: 20px;
           line-height: 1.2;
         }
-
-        @include media-query($on-laptop) {
-          font-size: 24px;
-        }
       }
 
       .headline-date {
@@ -132,28 +128,29 @@
       @include media-query($on-palm) {
         flex-direction: column;
       }
-
-      .item-date {
-        width: 110px;
-        font-size: 14px;
-        margin: 0;
-        flex-shrink: 0;
-        font-weight: 500;
-        color: $grey-dark-color;
-      }
     }
 
-    .item-info {
-      .post-excerpt {
-        padding: 0;
-        margin: 0;
-        font-weight: 400;
-        color: $dark-color;
-        font-size: 15px;
+    .item-date {
+      font-size: 14px;
+      margin: 0 0 2px 0;
+      flex-shrink: 0;
+      font-weight: 500;
+      color: $grey-dark-color;
+    }
 
-        @include dark-mode {
-          color: $grey-dark-color;
-        }
+    .post-excerpt {
+      padding: 0;
+      margin: 0;
+      font-weight: 400;
+      color: $dark-color;
+      font-size: 15px;
+
+      @include dark-mode {
+        color: $grey-dark-color;
+      }
+
+      @include media-query($on-palm) {
+        font-size: 14px;
       }
     }
 
@@ -162,7 +159,7 @@
       color: $dark-color;
       font-weight: $heavy-font-weight;
       word-break: break-all;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
 
       @include media-query($on-laptop) {
         font-size: 16px;

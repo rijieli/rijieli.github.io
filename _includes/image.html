@@ -1,0 +1,6 @@
+{% assign myVariable = {{page.path | remove: '_posts/' | slice: 0, 11 }} %}
+
+<img
+  src="/assets/posts/{{page.path | remove: '_posts/' | remove: myVariable | remove: '.md' }}/{{include.file}}"
+  alt="{{include.alt}}"
+/>

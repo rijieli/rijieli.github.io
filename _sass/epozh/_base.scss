@@ -248,6 +248,12 @@ pre {
   margin-left: auto;
   @extend %clearfix;
 
+  @include media-query($on-laptop) {
+    max-width: 100%;
+    padding-left: 36px;
+    padding-right: 36px;
+  }
+
   @include media-query($on-palm) {
     max-width: 100%;
     padding-left: 24px;

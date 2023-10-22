@@ -1,61 +1,90 @@
 ---
 layout: default
 title: Blog
-permalink: /landing/
+permalink: /landing-deprecated/
 sitemap_item: false
 ---
 
 <div class="wrapper blog">
-    {%- if site.posts.size > 0 -%}
-    {% assign cover_styles = "cover-sample-01, cover-sample-04, cover-sample-05, cover-sample-06, cover-sample-07" | split: ", " %}
-    <div class="headline blog-card-shadow">
-      {% assign headline = site.posts[0] %}
-      
-      <div class="headline-image">
-        {% if headline.cover_image %}
-        <a href="{{ headline.url | relative_url }}"><img class="item-cover" src="{{ headline.cover_image }}.jpg"></a>
-        {% elsif headline.show_excerpt_image %}
-        <a href="{{ headline.url | relative_url }}"><img class="item-cover" src="{%- include image_set.html content=headline.content -%}"></a>
-        {% else %}
-        <a href="{{ headline.url | relative_url }}" class="item-cover {{ cover_styles | sample }}"></a>
-        {% endif %}
+  {%- if site.posts.size > 0 -%} {% assign cover_styles = "cover-sample-01,
+  cover-sample-04, cover-sample-05, cover-sample-06, cover-sample-07" | split:
+  ", " %}
+  <div class="headline blog-card-shadow">
+    {% assign headline = site.posts[0] %}
+
+    <div class="headline-image">
+      {% if headline.cover_image %}
+      <a href="{{ headline.url | relative_url }}"
+        ><img class="item-cover" src="{{ headline.cover_image }}.jpg"
+      /></a>
+      {% elsif headline.show_excerpt_image %}
+      <a href="{{ headline.url | relative_url }}"
+        ><img
+          class="item-cover"
+          src="{%- include image_set.html content=headline.content -%}"
+      /></a>
+      {% else %}
+      <a
+        href="{{ headline.url | relative_url }}"
+        class="item-cover {{ cover_styles | sample }}"
+      ></a>
+      {% endif %}
+    </div>
+    <div class="headline-info">
+      <div class="headline-tag">
+        LATEST {{ headline.post_type | default: "" | upcase }}
       </div>
-      <div class="headline-info">
-        <div class="headline-tag">
-          LATEST {{ headline.post_type | default: "" | upcase }}
-        </div>
-        <a class="headline-title" href="{{ headline.url | relative_url }}">{{ headline.title }}</a>
-        <div class="headline-date">{{ headline.date | date: site.data_formats.date_format_formal}}</div>
+      <a class="headline-title" href="{{ headline.url | relative_url }}"
+        >{{ headline.title }}</a
+      >
+      <div class="headline-date">
+        {{ headline.date | date: site.data_formats.date_format_formal}}
       </div>
     </div>
-    <ul class="post-list">
-      <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
-      <!-- for post in paginator.posts -->
-      {%- for post in site.posts offset:1 -%}
-      {%- if post.hidden_post != true -%}
-      <li class="list-item blog-card-shadow">
-        {% if post.cover_image %}
-        <a href="{{ post.url | relative_url }}"><img class="item-cover" src="{{ post.cover_image }}-small.jpg"></a>
-        {% elsif post.show_excerpt_image %}
-        <a href="{{ post.url | relative_url }}"><img class="item-cover" src="{%- include image_set.html content=post.content -%}"></a>
-        {% else %}
-        <a href="{{ post.url | relative_url }}" class="item-cover {{ cover_styles | sample }}"></a>
-        {% endif %}
-        <div class="item-info">
-          <a class="item-link" href="{{ post.url | relative_url }}" target="_blank">
-            {{ post.title | escape }}
-          </a>
-          {%- assign date_format = site.data_formats.date_format_formal | default: "%b %-d, %Y" -%}
-          <p class="item-meta"><span class="item-date">{{ post.date | date: date_format }}</span>
-            <span class="item-type"> {{ post.post_type | default: "" | upcase }} </span>
-          </p>
-        </div>
-      </li>
-      {%- endif -%}
-      {%- endfor -%}
-    </ul>
-    {%- else - %}
-    <h2>No Posts Available.</h2>
-    {%- endif -%}
-    <!-- include pagination.html  -->
+  </div>
+  <ul class="post-list">
+    <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
+    <!-- for post in paginator.posts -->
+    {%- for post in site.posts offset:1 -%} {%- if post.hidden_post != true -%}
+    <li class="list-item blog-card-shadow">
+      {% if post.cover_image %}
+      <a href="{{ post.url | relative_url }}"
+        ><img class="item-cover" src="{{ post.cover_image }}-small.jpg"
+      /></a>
+      {% elsif post.show_excerpt_image %}
+      <a href="{{ post.url | relative_url }}"
+        ><img
+          class="item-cover"
+          src="{%- include image_set.html content=post.content -%}"
+      /></a>
+      {% else %}
+      <a
+        href="{{ post.url | relative_url }}"
+        class="item-cover {{ cover_styles | sample }}"
+      ></a>
+      {% endif %}
+      <div class="item-info">
+        <a
+          class="item-link"
+          href="{{ post.url | relative_url }}"
+          target="_blank"
+        >
+          {{ post.title | escape }}
+        </a>
+        {%- assign date_format = site.data_formats.date_format_formal | default:
+        "%b %-d, %Y" -%}
+        <p class="item-meta">
+          <span class="item-date">{{ post.date | date: date_format }}</span>
+          <span class="item-type">
+            {{ post.post_type | default: "" | upcase }}
+          </span>
+        </p>
+      </div>
+    </li>
+    {%- endif -%} {%- endfor -%}
+  </ul>
+  {%- else - %}
+  <h2>No Posts Available.</h2>
+  {%- endif -%}
+  <!-- include pagination.html  -->
 </div>

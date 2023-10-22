@@ -4,26 +4,23 @@ title: Blog
 ---
 
 <div class="wrapper blog">
-    {%- if paginator.posts.size > 0 -%}
-    <ul class="post-list-plain">
-      <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
-      {%- for post in paginator.posts -%}
-      {%- if post.hidden_post != true -%}
-      <li class="list-item">
-        {%- assign date_format = "%b %d, %Y" -%}
+  {%- if paginator.posts.size > 0 -%}
+  <ul class="post-list-plain">
+    <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
+    {%- for post in paginator.posts -%} {%- if post.hidden_post != true -%}
+    <li class="list-item">
+      {%- assign date_format = "%b %d, %Y" -%}
+      <div class="item-info">
         <p class="item-date">{{ post.date | date: date_format }}</p>
-        <div class="item-info">
-          <a class="item-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-          <p class="post-excerpt">{{ post.excerpt | strip_html }}</p>
-        </div>
-      </li>
-      {%- endif -%}
-      {%- endfor -%}
-    </ul>
-    {%- else - %}
-    <h2>No Posts Available.</h2>
-    {%- endif -%}
-    {% include pagination.html %}
+        <a class="item-link" href="{{ post.url | relative_url }}">
+          {{ post.title | escape }}
+        </a>
+        <p class="post-excerpt">{{ post.excerpt | strip_html }}</p>
+      </div>
+    </li>
+    {%- endif -%} {%- endfor -%}
+  </ul>
+  {%- else - %}
+  <h2>No Posts Available.</h2>
+  {%- endif -%} {% include pagination.html %}
 </div>
