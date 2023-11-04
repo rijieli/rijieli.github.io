@@ -1,65 +1,106 @@
 <style>
-    #generator {
-        width: 100%;
-        margin: 0 auto;
-    }
+  #generator {
+    width: 100%;
+    margin: 0 auto;
+  }
 
-    #generator form {
-        width: 100%;
-        margin: 0 auto;
-    }
+  #generator form {
+    width: 100%;
+    margin: 0 auto;
+  }
 
-    #generator form .form-group {
-        width: 100%;
-        margin: 0 auto;
-    }
+  #generator form .form-group {
+    width: 100%;
+    margin: 0 auto;
+  }
 
-    #generator form .form-group label {
-        width: 100%;
-        margin: 0 auto;
-        font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
+  #generator form .form-group label {
+    width: 100%;
+    margin: 0 auto;
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
 
-    #generator form .form-group textarea {
-        width: 100%;
-        margin: 0 auto;
-        border: 1px solid #ccc;
-        padding: 8px;
-        border-radius: 8px;
-        resize: vertical;
-    }
+  #generator form .form-group textarea {
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 8px;
+    resize: vertical;
+  }
+
+  #code-section {
+    overflow: hidden;
+    height: 0;
+    animation: height 0.3s ease forwards;
+  }
 </style>
 
 <div id="generator">
-    <button type="button" class="copy-button" onclick="generateAndCopy()">生成并复制</button>
-    <form>
-        <div class="form-group">
-            <label for="cookies">Cookies</label>
-            <textarea class="form-control" id="cookies" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="url">URL</label>
-            <!-- textarea -->
-            <textarea class="form-control" id="url" rows="3"></textarea>
-        </div>
-    </form>
+  <button id="genrate-button" type="button" class="copy-button">
+    生成并复制
+  </button>
+  <form>
+    <div class="form-group">
+      <label for="cookies">Cookies</label>
+      <textarea class="form-control" id="cookies" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="url">URL</label>
+      <!-- textarea -->
+      <textarea class="form-control" id="url" rows="3"></textarea>
+    </div>
+    <div class="language-bash highlighter-rouge" id="code-section">
+      <div class="highlight">
+        <pre class="highlight"><code id="install-code">Hello World</code></pre>
+      </div>
+    </div>
+  </form>
 </div>
 
 <script>
+  (function () {
+    let generateButton = document.getElementById("genrate-button");
+
     function generateAndCopy() {
-        var cookies = document.getElementById("cookies").value;
+      var cookies = document.getElementById("cookies").value;
 
-        // save cookie to local storage
-        localStorage.setItem("xcdownloadCookies", cookies);
+      // save cookie to local storage
+      localStorage.setItem("xcdownloadCookies", cookies);
 
-        var url = document.getElementById("url").value;
-        var command = `aria2c --header "Cookie: ADCDownloadAuth={Cookies}" -c {URL}`.replace("{Cookies}", cookies).replace("{URL}", url);
-        navigator.clipboard.writeText(command);
+      var url = document.getElementById("url").value;
+      var command =
+        `aria2c --header "Cookie: ADCDownloadAuth={Cookies}" -c {URL}`
+          .replace("{Cookies}", cookies)
+          .replace("{URL}", url);
+      navigator.clipboard.writeText(command);
+
+      generateButton.innerText = "已复制";
+      generateButton.classList.add("copied");
+      setTimeout(() => {
+        generateButton.innerText = "生成并复制";
+        generateButton.classList.remove("copied");
+      }, 1500);
+
+      let codeSection = document.getElementById("code-section");
+      var filename = url.substring(url.lastIndexOf("/") + 1);
+      if (filename !== "" && filename.includes("dmg")) {
+        let codeField = document.getElementById("install-code");
+        codeField.innerHTML =
+          "#如需要选择版本，运行 sudo xcode-select -s /Applications/Xcode[版本号].app\nxcodebuild -runFirstLaunch\nxcrun simctl runtime add " +
+          filename;
+        codeSection.style.height = "auto";
+      } else {
+        codeSection.style.height = "0";
+      }
     }
 
     // load cookie from local storage
     var cookies = localStorage.getItem("xcdownloadCookies");
     if (cookies != null) {
-        document.getElementById("cookies").value = cookies;
+      document.getElementById("cookies").value = cookies;
     }
+
+    generateButton.addEventListener("click", generateAndCopy);
+  })();
 </script>

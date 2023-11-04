@@ -12,11 +12,11 @@ Xcode 15 不再内置 iOS 模拟器，改为按需要增量安装。但这项改
 
 **⚠️ 以下内容需要你拥有开发者账号权限**
 
-> aria2 官方未提供 macOS 版本，如果不想自己编译可以通过 [Homebrew](https://formulae.brew.sh/formula/aria2) 安装
+> aria2 官方未提供 macOS 版本，如果不想自己编译可以通过 [Homebrew](https://formulae.brew.sh/formula/aria2){:target="\_blank"} 安装
 
 ## 寻找下载链接
 
-常见的链接结构如下面所示，在开发者官网 [More](https://developer.apple.com/download/all/?q=visionos) 页面搜索得到。
+常见的链接结构如下面所示，在开发者官网 [More](https://developer.apple.com/download/all/?q=visionos){:target="\_blank"} 页面搜索得到。
 
 https://download.developer.apple.com/Developer_Tools/iOS_17_beta_4_Simulator_Runtime/iOS_17_beta_4_Simulator_Runtime.dmg
 
