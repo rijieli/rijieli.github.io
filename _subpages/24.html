@@ -1,0 +1,53 @@
+---
+layout: default
+title: Game 24
+permalink: /24/
+---
+
+<style>
+  .game24 {
+    padding: 20px 10px 60px 10px;
+  }
+
+  .game24 h2 {
+    margin: 0;
+    padding: 10px 0px 20px 0px;
+  }
+
+  .game24 li {
+    list-style: none;
+    display: inline-block;
+    width: calc(33.33% - 1%); /* Adjust as needed */
+    margin: 3px 0; /* Adjust as needed for spacing */
+    font-family: ui-monospace, Monaco, Menlo, "SF Mono Regular",
+      "Lucida Console", SFMono-Regular, Consolas, "Courier New", Liberation Mono,
+      monospace;
+    font-size: 13px;
+  }
+
+  .question,
+  .solution {
+    display: inline-block;
+  }
+
+  .question {
+    color: #3498db; /* Adjust color as needed */
+  }
+
+  .solution {
+    color: #27ae60; /* Adjust color as needed */
+  }
+</style>
+
+<div class="wrapper game24">
+  <h2>Game 24 Solutions</h2>
+  <p>Please using ⌘ + F to search</p>
+  <ul>
+    {% for item in site.data.solution_final %}
+    <li>
+      <div class="question">{{item.key}}</div>
+      <div class="solution">{{item.solution}}</div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
