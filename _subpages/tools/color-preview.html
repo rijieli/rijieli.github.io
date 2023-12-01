@@ -1,13 +1,13 @@
 ---
-title: "Safari 15+ Theme Color Preview"
-description: Preview theme-color meta tag appearance
+title: "Hex Colors Preview"
+description: Preview Colors
 permalink: /hex-color-preview/
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    {% include head_basic.html %} {% assign defaultColor = "#0066FF" %} <link
+    {% include head_basic.html %} {% assign defaultColor = "#333" %} <link
     rel="stylesheet" href="{{ "/assets/notification.css" | relative_url }}">
     <meta name="theme-color" content="{{defaultColor}}" />
     <script src="/assets/tools/external/iro.min.js"></script>
@@ -15,7 +15,7 @@ permalink: /hex-color-preview/
       body {
         font-family: -apple-system, ui-serif, Helvetica, sans-serif;
         color: #fff;
-        background-color: #0066ff;
+        background-color: #333;
         box-sizing: border-box;
         margin: 0 15px;
       }
@@ -132,12 +132,9 @@ permalink: /hex-color-preview/
   <body>
     <div class="card-container card-background">
       <h1 id="site-title">{{ page.title }}</h1>
-      <h2 id="not-safari-notice">
-        Note: This tool requires Safari 15 or higher version
-      </h2>
       <div id="color-picker" style="display: none"></div>
 
-      <div style="display: flex">
+      <div style="display: flex; margin-bottom: 20px">
         <div id="c1" class="color-cell"></div>
         <div id="c2" class="color-cell"></div>
         <div id="c3" class="color-cell"></div>
@@ -147,67 +144,21 @@ permalink: /hex-color-preview/
       <input
         type="text"
         id="color-input"
-        value="{{defaultColor}}"
+        value="#A8A49B$#40423E$#FF5D39$#E3E0D8"
         autocomplete="off"
       />
 
-      <h2 class="code-gen code-gen-title">Meta Element Code:</h2>
-
-      <textarea
-        style="margin-bottom: 5px"
-        class="code-gen"
-        name="code-gen-line1"
-        id="code-gen-line1"
-        cols="30"
-        rows="1"
-        spellcheck="false"
-      >
-<meta name="theme-color" content="{{defaultColor}}"></textarea
-      >
-
-      <textarea
-        class="code-gen"
-        name="code-gen-line2"
-        id="code-gen-line2"
-        cols="30"
-        rows="2"
-        spellcheck="false"
-      >
-<meta name="theme-color" content="{{defaultColor}}" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="{{defaultColor}}" media="(prefers-color-scheme: dark)"></textarea
-      >
-
       <script>
         let themeColorPreview = (function (window, document) {
-          let colorPicker = new iro.ColorPicker("#color-picker", {
-            width: 280,
-            color: "#0066FF",
-          });
-          let codeGen1 = document.getElementById("code-gen-line1");
-          let codeGen2 = document.getElementById("code-gen-line2");
           let colorInput = document.getElementById("color-input");
-
-          let metaTag = document.querySelector("meta[name=theme-color]");
-
-          colorPicker.on("color:change", function (color) {
-            let colorString = colorPicker.color.hexString.toUpperCase();
-            metaTag.content = colorString;
-            document.getElementsByTagName("body")[0].style.backgroundColor =
-              colorString;
-            colorInput.value = colorString;
-
-            codeGen1.value = `<meta name="theme-color" content="${colorString}">`;
-
-            codeGen2.value = `<meta name="theme-color" content="${colorString}" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="${colorString}" media="(prefers-color-scheme: dark)">`;
-          });
-
-          colorInput.addEventListener("change", (e) => {
+          function apply_color() {
+            var trimmedValue = colorInput.value.trim();
             var colorArray;
-            if (colorInput.value.includes("$")) {
-              colorArray = colorInput.value.split("$");
+
+            if (trimmedValue.includes("$")) {
+              colorArray = trimmedValue.split("$");
             } else {
-              colorArray = colorInput.value.split("_");
+              colorArray = trimmedValue.split("_");
             }
             var cellIds = ["c1", "c2", "c3", "c4"];
 
@@ -215,32 +166,14 @@ permalink: /hex-color-preview/
               var cell = document.getElementById(cellIds[i]);
               cell.style.backgroundColor = colorArray[i];
             }
+          }
+
+          colorInput.addEventListener("change", (e) => {
+            apply_color();
           });
 
-          let nsnotice = document.getElementById("not-safari-notice");
-          if (nsnotice != null) {
-            let isSafari =
-              navigator.vendor &&
-              navigator.vendor.indexOf("Apple") > -1 &&
-              navigator.userAgent &&
-              navigator.userAgent.indexOf("Chrome") == -1 &&
-              navigator.userAgent.indexOf("CriOS") == -1 &&
-              navigator.userAgent.indexOf("FxiOS") == -1;
-
-            let anchorString = "Version/";
-            let vIndex =
-              navigator.userAgent.indexOf(anchorString) + anchorString.length;
-            let versionString = navigator.userAgent.slice(vIndex, vIndex + 2);
-
-            let versionNumber =
-              versionString != "" &&
-              parseInt(versionString) &&
-              parseInt(versionString) >= 15;
-
-            if (isSafari && versionNumber) {
-              nsnotice.style.display = "none";
-            }
-          }
+          colorInput.value = "#A8A49B$#40423E$#FF5D39$#E3E0D8";
+          apply_color();
         })(window, document);
       </script>
     </div>
