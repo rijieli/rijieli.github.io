@@ -8,6 +8,8 @@ hidden_post: false
 post_type: Note
 ---
 
+> 更新：23/12/15 支持 iOS 17 以下模拟器下载链接
+
 Xcode 15 不再内置 iOS 模拟器，改为按需要增量安装。但这项改动带来新的问题：内置的模拟器下载工具速度很慢，而且没有断点续传。下载过程一旦因为网络波动而中断，需要从零重新开始下载。用 aria2 下载非常适合这个场景。
 
 **⚠️ 以下内容需要你拥有开发者账号权限**
@@ -16,9 +18,15 @@ Xcode 15 不再内置 iOS 模拟器，改为按需要增量安装。但这项改
 
 ## 寻找下载链接
 
+### iOS 17+
+
 常见的链接结构如下面所示，在开发者官网 [More](https://developer.apple.com/download/all/?q=visionos){:target="\_blank"} 页面搜索得到。
 
 https://download.developer.apple.com/Developer_Tools/iOS_17_beta_4_Simulator_Runtime/iOS_17_beta_4_Simulator_Runtime.dmg
+
+### iOS 16 及以下
+
+**更新：**iOS 17 以下模拟器绑定在 Xcode 中，上面的列表无法搜索得到下载链接，但 Apple 在隐藏文档里列出了相应的链接：_[点我搜索](https://devimages-cdn.apple.com/downloads/xcode/simulators/index2.dvtdownloadableindex)_，打开页面后搜索名称+版本。
 
 ## 获取 Cookies
 
