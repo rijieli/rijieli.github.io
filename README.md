@@ -2,20 +2,24 @@
 
 Roger's homepage powered by [Jekyll](https://jekyllrb.com), hosted on [GitHub Pages](https://pages.github.com).
 
-## Install Locally
+## Getting Started
 
-```bash
-brew install rbenv ruby-build
-rbenv init # Or add eval "$(rbenv init - zsh)" to rc file
-rbenv install 2.7.3
-echo 2.7.3 > .ruby-version
-gem inst ffi -- --disable-system-libffi
-bundle install
-bundle exec jekyll serve
+1.  **Set up Ruby:** Make sure you are using Ruby `2.7.3`. If you're using `rbenv`, you can set the local Ruby version with:
+    ```bash
+    rbenv local 2.7.3
+    ```
 
-# Build inlcude drafts
-bundle exec jekyll serve --drafts
-```
+2.  **Install Dependencies:** Install the required gems.
+    ```bash
+    gem install bundler:2.3.10
+    bundle install
+    ```
+
+3.  **Run the Server:** Build the site and run a local server.
+    ```bash
+    bundle exec jekyll serve --livereload --drafts
+    ```
+    The site will be available at `http://127.0.0.1:4000/`.
 
 ## Manage Script
 

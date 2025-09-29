@@ -77,8 +77,6 @@
     @include media-query($on-palm) {
         column-gap: 0px;
     }
-
-    min-height: 90vh;
   
     .list-item {
         margin: 0px;
