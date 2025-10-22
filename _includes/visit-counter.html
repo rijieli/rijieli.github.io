@@ -1,0 +1,240 @@
+<!-- Visit Counter Component -->
+<!-- Add this include to your post layout where you want to display visit counts -->
+
+{% if page.url %}
+<div class="visit-counter" data-article-url="{{ page.url | absolute_url }}">
+  <span class="visit-counter-icon">👁</span>
+  <span class="visit-counter-text">Views: </span>
+  <span class="visit-counter-count" data-loading-text="Loading...">--</span>
+</div>
+
+<style>
+.visit-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9em;
+  color: #666;
+  margin: 10px 0;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.visit-counter:hover {
+  opacity: 1;
+}
+
+.visit-counter-icon {
+  font-size: 1.1em;
+}
+
+.visit-counter-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.visit-counter-count[data-loading="true"] {
+  opacity: 0.6;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .visit-counter {
+    color: #aaa;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .visit-counter {
+    font-size: 0.85em;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Configuration
+  const WORKER_URL = '{{ site.visit_counter_url | default: "https://roger-zone.zhenhe.site" }}';
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+  const RETRY_DELAY = 1000; // 1 second retry delay
+
+  class VisitCounter {
+    constructor(element) {
+      this.element = element;
+      this.url = element.dataset.articleUrl;
+      this.countElement = element.querySelector('.visit-counter-count');
+      this.cachedCount = this.getCachedCount();
+
+      if (!this.url) {
+        console.warn('VisitCounter: No article URL found');
+        return;
+      }
+
+      this.init();
+    }
+
+    init() {
+      // Try to use cached count first
+      if (this.cachedCount !== null) {
+        this.updateDisplay(this.cachedCount);
+        // Update count in background if cache is old
+        if (this.isCacheOld()) {
+          this.incrementCount();
+        }
+      } else {
+        // No cache, fetch and increment
+        this.incrementCount();
+      }
+    }
+
+    getCachedCount() {
+      const cacheKey = `visit-count-${this.url}`;
+      const cached = localStorage.getItem(cacheKey);
+
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          const now = Date.now();
+
+          // Return cached count if it's not too old
+          if (now - data.timestamp < CACHE_DURATION) {
+            return data.count;
+          }
+        } catch (error) {
+          console.warn('VisitCounter: Failed to parse cache', error);
+        }
+      }
+
+      return null;
+    }
+
+    isCacheOld() {
+      const cacheKey = `visit-count-${this.url}`;
+      const cached = localStorage.getItem(cacheKey);
+
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          return (Date.now() - data.timestamp) >= CACHE_DURATION;
+        } catch (error) {
+          return true;
+        }
+      }
+
+      return true;
+    }
+
+    cacheCount(count) {
+      const cacheKey = `visit-count-${this.url}`;
+      const data = {
+        count: count,
+        timestamp: Date.now()
+      };
+
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+      } catch (error) {
+        console.warn('VisitCounter: Failed to cache count', error);
+      }
+    }
+
+    updateDisplay(count, loading = false) {
+      this.countElement.textContent = loading ? this.countElement.dataset.loadingText : count.toLocaleString();
+      this.countElement.dataset.loading = loading;
+    }
+
+    async incrementCount() {
+      this.updateDisplay(null, true);
+
+      try {
+        const response = await fetch(`${WORKER_URL}/api/count`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: this.url })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          this.updateDisplay(data.newVisits);
+          this.cacheCount(data.newVisits);
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      } catch (error) {
+        console.error('VisitCounter: Failed to increment count', error);
+
+        // Fallback: try to just get the count
+        this.getCount().catch(() => {
+          // If that fails too, show error state
+          this.updateDisplay('?', false);
+          this.countElement.title = `Error: ${error.message}`;
+        });
+      }
+    }
+
+    async getCount() {
+      try {
+        const response = await fetch(`${WORKER_URL}/api/count?url=${encodeURIComponent(this.url)}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        const count = data.visits || 0;
+        this.updateDisplay(count);
+        this.cacheCount(count);
+
+        return count;
+      } catch (error) {
+        console.error('VisitCounter: Failed to get count', error);
+        throw error;
+      }
+    }
+
+    // Public method to manually refresh the count
+    refresh() {
+      localStorage.removeItem(`visit-count-${this.url}`);
+      this.cachedCount = null;
+      this.incrementCount();
+    }
+  }
+
+  // Initialize visit counters when DOM is ready
+  function initVisitCounters() {
+    const counterElements = document.querySelectorAll('.visit-counter[data-article-url]');
+
+    counterElements.forEach(element => {
+      // Avoid duplicate initialization
+      if (!element.dataset.initialized) {
+        new VisitCounter(element);
+        element.dataset.initialized = 'true';
+      }
+    });
+  }
+
+  // Initialize immediately if DOM is ready, otherwise wait for DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVisitCounters);
+  } else {
+    initVisitCounters();
+  }
+
+  // Expose VisitCounter class for debugging or manual control
+  window.VisitCounter = VisitCounter;
+})();
+</script>
+{% endif %}

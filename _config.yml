@@ -71,6 +71,7 @@ exclude:
   - .jekyll-cache/
   - README.md
   - _excludes
+  - _visit_counter
 
 include:
   - _subpages
