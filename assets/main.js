@@ -66,7 +66,6 @@
   // 获取初始文档
   function fetchSitemap() {
     if (this.status != 200) {
-      searchAPIStatus = 500;
       return;
     }
 
