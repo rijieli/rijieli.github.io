@@ -26,6 +26,8 @@ layout: default
       itemprop="datePublished">
         {{ page.date | date: site.data_formats.date_format_formal }}
       </time>
+
+      {% include visit-counter.html %}
     </div>
 
     <div class="post-content e-content" itemprop="articleBody">

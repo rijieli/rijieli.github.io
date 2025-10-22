@@ -1,240 +1,76 @@
-<!-- Visit Counter Component -->
-<!-- Add this include to your post layout where you want to display visit counts -->
-
 {% if page.url %}
 <div class="visit-counter" data-article-url="{{ page.url | absolute_url }}">
-  <span class="visit-counter-icon">👁</span>
-  <span class="visit-counter-text">Views: </span>
-  <span class="visit-counter-count" data-loading-text="Loading...">--</span>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="visit-counter-icon">
+    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+  </svg>
+  <span class="post-date visit-counter-count" data-loading-text="Loading...">--</span>
 </div>
 
 <style>
 .visit-counter {
   display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.9em;
   color: #666;
-  margin: 10px 0;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
+  align-items: center;
+  gap: 5px;
 }
 
-.visit-counter:hover {
-  opacity: 1;
+.visit-counter[data-hidden="true"] {
+  display: none;
 }
-
 .visit-counter-icon {
-  font-size: 1.1em;
-}
-
-.visit-counter-count {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.visit-counter-count[data-loading="true"] {
-  opacity: 0.6;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .visit-counter {
-    color: #aaa;
-  }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .visit-counter {
-    font-size: 0.85em;
-  }
+  padding-top: 1px;
 }
 </style>
 
 <script>
-(function() {
-  // Configuration
+(() => {
   const WORKER_URL = '{{ site.visit_counter_url | default: "https://roger-zone.zhenhe.site" }}';
-  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
-  const RETRY_DELAY = 1000; // 1 second retry delay
+  const CACHE_MS = 5 * 60 * 1000;  // cache valid for display
+  const SKIP_MS = 60 * 1000;       // skip network if fetched within 60s
 
-  class VisitCounter {
-    constructor(element) {
-      this.element = element;
-      this.url = element.dataset.articleUrl;
-      this.countElement = element.querySelector('.visit-counter-count');
-      this.cachedCount = this.getCachedCount();
+  const getCache = url => {
+    try {
+      const d = JSON.parse(localStorage.getItem(`visit-${url}`));
+      if (!d) return null;
+      const age = Date.now() - d.t;
+      return { count: d.c, age };
+    } catch { return null; }
+  };
 
-      if (!this.url) {
-        console.warn('VisitCounter: No article URL found');
-        return;
-      }
+  const setCache = (url, c) =>
+    localStorage.setItem(`visit-${url}`, JSON.stringify({ c, t: Date.now() }));
 
-      this.init();
-    }
+  const fetchCount = url =>
+    fetch(`${WORKER_URL}/api/count?url=${encodeURIComponent(url)}`)
+      .then(r => r.json())
+      .then(d => d.newVisits || d.visits || 0);
 
-    init() {
-      // Try to use cached count first
-      if (this.cachedCount !== null) {
-        this.updateDisplay(this.cachedCount);
-        // Update count in background if cache is old
-        if (this.isCacheOld()) {
-          this.incrementCount();
-        }
-      } else {
-        // No cache, fetch and increment
-        this.incrementCount();
-      }
-    }
+  const init = () => {
+    document.querySelectorAll('.visit-counter[data-article-url]').forEach(el => {
+      const url = el.dataset.articleUrl;
+      const span = el.querySelector('.visit-counter-count');
+      el.style.display = 'none';
 
-    getCachedCount() {
-      const cacheKey = `visit-count-${this.url}`;
-      const cached = localStorage.getItem(cacheKey);
-
+      const cached = getCache(url);
       if (cached) {
-        try {
-          const data = JSON.parse(cached);
-          const now = Date.now();
-
-          // Return cached count if it's not too old
-          if (now - data.timestamp < CACHE_DURATION) {
-            return data.count;
-          }
-        } catch (error) {
-          console.warn('VisitCounter: Failed to parse cache', error);
-        }
+        span.textContent = cached.count.toLocaleString();
+        el.style.display = '';
+        if (cached.age < SKIP_MS) return; // skip network if fresh
       }
 
-      return null;
-    }
-
-    isCacheOld() {
-      const cacheKey = `visit-count-${this.url}`;
-      const cached = localStorage.getItem(cacheKey);
-
-      if (cached) {
-        try {
-          const data = JSON.parse(cached);
-          return (Date.now() - data.timestamp) >= CACHE_DURATION;
-        } catch (error) {
-          return true;
-        }
-      }
-
-      return true;
-    }
-
-    cacheCount(count) {
-      const cacheKey = `visit-count-${this.url}`;
-      const data = {
-        count: count,
-        timestamp: Date.now()
-      };
-
-      try {
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-      } catch (error) {
-        console.warn('VisitCounter: Failed to cache count', error);
-      }
-    }
-
-    updateDisplay(count, loading = false) {
-      this.countElement.textContent = loading ? this.countElement.dataset.loadingText : count.toLocaleString();
-      this.countElement.dataset.loading = loading;
-    }
-
-    async incrementCount() {
-      this.updateDisplay(null, true);
-
-      try {
-        const response = await fetch(`${WORKER_URL}/api/count`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ url: this.url })
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          this.updateDisplay(data.newVisits);
-          this.cacheCount(data.newVisits);
-        } else {
-          throw new Error(data.error || 'Unknown error');
-        }
-      } catch (error) {
-        console.error('VisitCounter: Failed to increment count', error);
-
-        // Fallback: try to just get the count
-        this.getCount().catch(() => {
-          // If that fails too, show error state
-          this.updateDisplay('?', false);
-          this.countElement.title = `Error: ${error.message}`;
-        });
-      }
-    }
-
-    async getCount() {
-      try {
-        const response = await fetch(`${WORKER_URL}/api/count?url=${encodeURIComponent(this.url)}`);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        const count = data.visits || 0;
-        this.updateDisplay(count);
-        this.cacheCount(count);
-
-        return count;
-      } catch (error) {
-        console.error('VisitCounter: Failed to get count', error);
-        throw error;
-      }
-    }
-
-    // Public method to manually refresh the count
-    refresh() {
-      localStorage.removeItem(`visit-count-${this.url}`);
-      this.cachedCount = null;
-      this.incrementCount();
-    }
-  }
-
-  // Initialize visit counters when DOM is ready
-  function initVisitCounters() {
-    const counterElements = document.querySelectorAll('.visit-counter[data-article-url]');
-
-    counterElements.forEach(element => {
-      // Avoid duplicate initialization
-      if (!element.dataset.initialized) {
-        new VisitCounter(element);
-        element.dataset.initialized = 'true';
-      }
+      fetchCount(url)
+        .then(c => {
+          span.textContent = c.toLocaleString();
+          el.style.display = '';
+          setCache(url, c);
+        })
+        .catch(() => { el.style.display = 'none'; });
     });
-  }
+  };
 
-  // Initialize immediately if DOM is ready, otherwise wait for DOMContentLoaded
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initVisitCounters);
-  } else {
-    initVisitCounters();
-  }
-
-  // Expose VisitCounter class for debugging or manual control
-  window.VisitCounter = VisitCounter;
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', init)
+    : init();
 })();
 </script>
 {% endif %}

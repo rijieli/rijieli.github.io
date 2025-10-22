@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
-  {%- include head.html -%}
+{%- include head.html -%}
 
-  <body>
+<body>
 
-    {%- include header.html -%}
+  {%- include header.html -%}
 
-    <main class="page-content" aria-label="Content">
-        {{ content }}
-    </main>
+  <main class="page-content" aria-label="Content">
+      {{ content }}
+  </main>
 
-    {%- include footer.html -%}
+  {%- include footer.html -%}
 
-  </body>
+</body>
 
-  <script src="{{ "/assets/main.js" | relative_url }}"></script>
+<script src="{{ "/assets/main.js" | relative_url }}"></script>
 
-  {% include scroll_to_top.html %}
+{% include scroll_to_top.html %}
 
+<!-- Global Visit Count Update Logic -->
+{% if page.url %}
+<script>
+(() => {
+  const WORKER_URL = '{{ site.visit_counter_url | default: "https://roger-zone.zhenhe.site" }}';
+  const pageUrl = '{{ page.url | absolute_url }}';
+  if (!pageUrl) return;
+
+  const update = () => fetch(`${WORKER_URL}/api/count`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: pageUrl })
+  });
+
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', update)
+    : update();
+})();
+</script>
+{% endif %}
 </html>
