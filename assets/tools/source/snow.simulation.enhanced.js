@@ -12,6 +12,9 @@
   let isRunning = false;
   let windGusts = [];
   let lastGustTime = Date.now();
+  
+  // Generic cache for Unicode snowflake shapes (keyed by Unicode character)
+  let unicodeSnowflakeCache = {};
 
   // Default configuration values
   const DEFAULT_CONFIG = {
@@ -102,6 +105,42 @@
       drawMethod: 'drawCrystal',
       icon: '⬡',
       title: 'Crystal'
+    },
+    standard: {
+      drawMethod: 'drawUnicode',
+      icon: '❄',
+      title: 'Standard',
+      unicode: '❄'
+    },
+    snowflake1: {
+      drawMethod: 'drawUnicode',
+      icon: '❅',
+      title: 'Snowflake 1',
+      unicode: '❅'
+    },
+    snowflake2: {
+      drawMethod: 'drawUnicode',
+      icon: '❆',
+      title: 'Snowflake 2',
+      unicode: '❆'
+    },
+    snowflake3: {
+      drawMethod: 'drawUnicode',
+      icon: '❈',
+      title: 'Snowflake 3',
+      unicode: '❈'
+    },
+    snowflake4: {
+      drawMethod: 'drawUnicode',
+      icon: '❉',
+      title: 'Snowflake 4',
+      unicode: '❉'
+    },
+    snowflakeEmoji: {
+      drawMethod: 'drawUnicode',
+      icon: '❄️',
+      title: 'Snowflake Emoji',
+      unicode: '❄️'
     }
   };
 
@@ -437,6 +476,62 @@
     ctx.restore();
   };
 
+  // Generic function to create cached Unicode snowflake shape
+  function createUnicodeSnowflakeCache(unicodeChar) {
+    // Return existing cache if already created
+    if (unicodeSnowflakeCache[unicodeChar]) {
+      return unicodeSnowflakeCache[unicodeChar];
+    }
+    
+    // Create offscreen canvas for caching
+    const cacheSize = 200; // Large enough for good quality
+    const cacheCanvas = document.createElement('canvas');
+    cacheCanvas.width = cacheSize;
+    cacheCanvas.height = cacheSize;
+    const cacheCtx = cacheCanvas.getContext('2d');
+    
+    // Draw the Unicode character once
+    cacheCtx.textAlign = 'center';
+    cacheCtx.textBaseline = 'middle';
+    cacheCtx.font = '150px Arial';
+    cacheCtx.fillStyle = 'white';
+    cacheCtx.fillText(unicodeChar, cacheSize / 2, cacheSize / 2);
+    
+    // Store in cache
+    unicodeSnowflakeCache[unicodeChar] = cacheCanvas;
+    return cacheCanvas;
+  }
+
+  // Generic Unicode snowflake drawer - accepts any Unicode character
+  Snowflake.prototype.drawUnicode = function(x, y, size, rotation) {
+    // Get the Unicode character for this snowflake type
+    const typeConfig = SNOWFLAKE_TYPES[this.type];
+    const unicodeChar = typeConfig && typeConfig.unicode ? typeConfig.unicode : '❄';
+    
+    // Get or create cache for this Unicode character
+    const cachedShape = createUnicodeSnowflakeCache(unicodeChar);
+    
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    
+    // Scale the cached image to match the desired size
+    const scale = size / 75; // Adjust based on cache size (200px cache, ~150px character)
+    ctx.scale(scale, scale);
+    
+    // Draw the cached image
+    // The fillStyle is already set by the draw() method, so we use multiply to apply color
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(cachedShape, -cachedShape.width / 2, -cachedShape.height / 2);
+    
+    // Apply color tint using multiply (white * color = color)
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillRect(-cachedShape.width / 2, -cachedShape.height / 2, 
+                  cachedShape.width, cachedShape.height);
+    
+    ctx.restore();
+  };
+
   Snowflake.prototype.draw = function() {
     const layer = DEPTH_LAYERS[this.layer];
 
@@ -588,6 +683,14 @@
 
     ctx = canvas.getContext('2d');
     resizeCanvas();
+
+    // Pre-create caches for all Unicode snowflake types
+    Object.keys(SNOWFLAKE_TYPES).forEach(function(typeKey) {
+      const typeConfig = SNOWFLAKE_TYPES[typeKey];
+      if (typeConfig.unicode) {
+        createUnicodeSnowflakeCache(typeConfig.unicode);
+      }
+    });
 
     // Load saved settings
     loadSettings();
