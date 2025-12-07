@@ -19,7 +19,7 @@
 
     // Physics
     gravity: 0.5,
-    windSpeed: 0, // wind strength
+    windSpeed: 50, // wind strength
     windDirection: Math.PI / 2, // 90 degrees
     turbulence: 0.02,
 
@@ -33,7 +33,7 @@
     backgroundColor: '#000000',
 
     // Snowflake types
-    snowflakeType: 'dendrite' // 'all' or specific type
+    snowflakeType: 'defaultStyle' // 'all' or specific type
   };
 
   // Configuration
@@ -66,8 +66,47 @@
     foreground: { speed: 1.2, size: 1.0, opacity: 1.0, blur: 0, particleRatio: 0.2 }
   };
 
-  // Available snowflake types
-  const AVAILABLE_SNOWFLAKE_TYPES = ['dendrite', 'stellar', 'hexagon', 'needle', 'irregular'];
+  // Snowflake types configuration - stores draw function, icon, and title for each type
+  const SNOWFLAKE_TYPES = {
+    defaultStyle: {
+      drawMethod: 'drawDefaultStyle',
+      icon: '❋',
+      title: 'Default Style'
+    },
+    dendrite: {
+      drawMethod: 'drawDendrite',
+      icon: '❄',
+      title: 'Dendrite'
+    },
+    stellar: {
+      drawMethod: 'drawStellar',
+      icon: '❅',
+      title: 'Stellar'
+    },
+    hexagon: {
+      drawMethod: 'drawHexagon',
+      icon: '✦',
+      title: 'Hexagon'
+    },
+    needle: {
+      drawMethod: 'drawNeedle',
+      icon: '✱',
+      title: 'Needle'
+    },
+    irregular: {
+      drawMethod: 'drawIrregular',
+      icon: '✻',
+      title: 'Irregular'
+    },
+    crystal: {
+      drawMethod: 'drawCrystal',
+      icon: '⬡',
+      title: 'Crystal'
+    }
+  };
+
+  // Get available snowflake type keys as array
+  const AVAILABLE_SNOWFLAKE_TYPES = Object.keys(SNOWFLAKE_TYPES);
 
   // UI Elements
   let controlElement, tipsElement, tipsButton;
@@ -281,6 +320,123 @@
     ctx.restore();
   };
 
+  // Crystal snowflake with geometric patterns
+  Snowflake.prototype.drawCrystal = function(x, y, size, rotation) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+
+    // Draw hexagonal crystal structure
+    const hexSize = size * 0.8;
+    
+    // Outer hexagon
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3;
+      const px = Math.cos(angle) * hexSize;
+      const py = Math.sin(angle) * hexSize;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    // Inner hexagon
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3;
+      const px = Math.cos(angle) * hexSize * 0.5;
+      const py = Math.sin(angle) * hexSize * 0.5;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    // Draw 6 main arms with geometric patterns
+    for (let i = 0; i < 6; i++) {
+      ctx.save();
+      ctx.rotate((i * Math.PI) / 3);
+      
+      // Main arm
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -size);
+      ctx.stroke();
+
+      // Geometric patterns along the arm
+      const patternCount = 3;
+      for (let j = 1; j <= patternCount; j++) {
+        const pos = (j / (patternCount + 1)) * size;
+        const patternSize = size * 0.15 * (1 - j * 0.2);
+        
+        // Draw small hexagons
+        ctx.save();
+        ctx.translate(0, -pos);
+        ctx.beginPath();
+        for (let k = 0; k < 6; k++) {
+          const angle = (k * Math.PI) / 3;
+          const px = Math.cos(angle) * patternSize;
+          const py = Math.sin(angle) * patternSize;
+          if (k === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    // Center filled hexagon
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3;
+      const px = Math.cos(angle) * size * 0.12;
+      const py = Math.sin(angle) * size * 0.12;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  };
+
+  // Google-style simple snowflake (based on &#10052; symbol)
+  Snowflake.prototype.drawDefaultStyle = function(x, y, size, rotation) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+
+    // Draw a simple 6-pointed star/snowflake pattern
+    // Main 6 arms
+    for (let i = 0; i < 6; i++) {
+      ctx.rotate(Math.PI / 3);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -size);
+      ctx.stroke();
+      
+      // Small side branches on each arm
+      const branchY = -size * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(0, branchY);
+      ctx.lineTo(-size * 0.15, branchY - size * 0.1);
+      ctx.moveTo(0, branchY);
+      ctx.lineTo(size * 0.15, branchY - size * 0.1);
+      ctx.stroke();
+    }
+
+    // Center circle
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  };
+
   Snowflake.prototype.draw = function() {
     const layer = DEPTH_LAYERS[this.layer];
 
@@ -295,28 +451,15 @@
       ctx.filter = 'blur(' + layer.blur + 'px)';
     }
 
-    // Draw based on type
-    switch(this.type) {
-      case 'dendrite':
-        this.drawDendrite(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      case 'stellar':
-        this.drawStellar(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      case 'hexagon':
-        this.drawHexagon(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      case 'needle':
-        this.drawNeedle(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      case 'irregular':
-        this.drawIrregular(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      default:
-        // Simple circle
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size * layer.size, 0, Math.PI * 2);
-        ctx.fill();
+    // Draw based on type using configuration
+    if (this.type && SNOWFLAKE_TYPES[this.type] && this[SNOWFLAKE_TYPES[this.type].drawMethod]) {
+      const drawMethod = SNOWFLAKE_TYPES[this.type].drawMethod;
+      this[drawMethod](this.x, this.y, this.size * layer.size, this.rotation);
+    } else {
+      // Simple circle fallback
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * layer.size, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     ctx.restore();
@@ -493,10 +636,51 @@
     }
   }
 
+  // Generate flake type controls from SNOWFLAKE_TYPES configuration
+  function generateFlakeTypeControls() {
+    const flakeTypeGroup = document.getElementById("flake-type-group");
+    if (!flakeTypeGroup) return;
+
+    // Clear existing content
+    flakeTypeGroup.innerHTML = '';
+
+    // Add "All" option
+    const currentType = config.snowflakeType || 'dendrite';
+    const allOption = document.createElement('label');
+    allOption.className = 'flake-type-option';
+    const isAllChecked = currentType === 'all';
+    allOption.innerHTML = `
+      <input type="radio" name="snowflakeType" value="all" ${isAllChecked ? 'checked' : ''}>
+      <span class="flake-type-label">All</span>
+    `;
+    flakeTypeGroup.appendChild(allOption);
+
+    // Add options for each snowflake type from configuration
+    AVAILABLE_SNOWFLAKE_TYPES.forEach(function(type) {
+      const typeConfig = SNOWFLAKE_TYPES[type];
+      if (!typeConfig) return;
+
+      const option = document.createElement('label');
+      option.className = 'flake-type-option';
+      option.title = typeConfig.title;
+      
+      const isChecked = currentType === type;
+      option.innerHTML = `
+        <input type="radio" name="snowflakeType" value="${type}" ${isChecked ? 'checked' : ''}>
+        <span class="flake-icon">${typeConfig.icon}</span>
+      `;
+      
+      flakeTypeGroup.appendChild(option);
+    });
+  }
+
   function initializeUI() {
     controlElement = document.getElementById("snow-simulation-control-panel");
     tipsElement = document.getElementById("tips");
     tipsButton = document.getElementById("tips-button");
+
+    // Generate flake type controls from configuration
+    generateFlakeTypeControls();
 
     // Setup panel visibility on mouse enter/leave of the panel itself only
     if (controlElement) {
