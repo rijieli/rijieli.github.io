@@ -550,13 +550,14 @@
     }
 
     // Draw based on type using configuration
+    // Note: this.size already includes layer.size scaling from constructor, so don't multiply again
     if (this.type && SNOWFLAKE_TYPES[this.type] && this[SNOWFLAKE_TYPES[this.type].drawMethod]) {
       const drawMethod = SNOWFLAKE_TYPES[this.type].drawMethod;
-      this[drawMethod](this.x, this.y, this.size * layer.size, this.rotation);
+      this[drawMethod](this.x, this.y, this.size, this.rotation);
     } else {
       // Simple circle fallback
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size * layer.size, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
       ctx.fill();
     }
 
