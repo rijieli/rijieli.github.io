@@ -13,21 +13,21 @@
   let windGusts = [];
   let lastGustTime = Date.now();
 
-  // Configuration
-  let config = {
+  // Default configuration values
+  const DEFAULT_CONFIG = {
     // Quality settings
     quality: 'medium',
-    particleCount: 300,
+    particleCount: 500, // density
 
     // Physics
     gravity: 0.5,
-    windSpeed: 0,
-    windDirection: 0,
+    windSpeed: 0, // wind strength
+    windDirection: Math.PI / 2, // 90 degrees
     turbulence: 0.02,
 
     // Visual
-    snowSpeed: 100,
-    snowFlakeMaxRadius: 5,
+    snowSpeed: 500, // gravity multiplier
+    snowFlakeMaxRadius: 22, // size
     blurEnabled: true,
 
     // Colors
@@ -35,18 +35,46 @@
     backgroundColor: '#000000',
 
     // Snowflake types
-    snowflakeType: 'all', // 'all' or specific type
+    snowflakeType: 'dendrite', // 'all' or specific type
 
-    // Performance
-    targetFPS: 30
+    // Frame rate
+    frameDelay: 1000 / 45 // Default 45 FPS (medium)
   };
 
-  // Quality presets
-  const QUALITY_PRESETS = {
-    low: { particleCount: 150, detail: 'basic', blur: false, frameRate: 30 },
-    medium: { particleCount: 300, detail: 'standard', blur: true, frameRate: 30 },
-    high: { particleCount: 500, detail: 'detailed', blur: true, frameRate: 60 },
-    ultra: { particleCount: 1000, detail: 'complex', blur: true, frameRate: 60 }
+  // Configuration
+  let config = {
+    // Quality settings
+    quality: DEFAULT_CONFIG.quality,
+    particleCount: DEFAULT_CONFIG.particleCount,
+
+    // Physics
+    gravity: DEFAULT_CONFIG.gravity,
+    windSpeed: DEFAULT_CONFIG.windSpeed,
+    windDirection: DEFAULT_CONFIG.windDirection,
+    turbulence: DEFAULT_CONFIG.turbulence,
+
+    // Visual
+    snowSpeed: DEFAULT_CONFIG.snowSpeed,
+    snowFlakeMaxRadius: DEFAULT_CONFIG.snowFlakeMaxRadius,
+    blurEnabled: DEFAULT_CONFIG.blurEnabled,
+
+    // Colors
+    snowColor: DEFAULT_CONFIG.snowColor,
+    backgroundColor: DEFAULT_CONFIG.backgroundColor,
+
+    // Snowflake types
+    snowflakeType: DEFAULT_CONFIG.snowflakeType,
+
+    // Frame rate
+    frameDelay: DEFAULT_CONFIG.frameDelay
+  };
+
+  // Frame rate presets
+  const FRAME_RATE_PRESETS = {
+    low: 30,
+    medium: 45,
+    high: 60,
+    ultra: 120
   };
 
   // Depth layers for parallax
@@ -58,8 +86,10 @@
 
   // UI Elements
   let controlElement, tipsElement, tipsButton;
-  let qualitySelector, windSpeedSlider, windDirectionSlider;
-  let snowIntensitySlider, blurToggle, snowflakeTypeSelector;
+  let windSpeedSlider, windDirectionSlider;
+  let snowIntensitySlider, blurToggle;
+  let windDirectionArrow;
+  let hidePanelTimeout = null;
 
   // Snowflake class with multiple types
   function Snowflake(x, y, layer, type) {
@@ -68,9 +98,9 @@
     this.layer = layer || 'midground';
     this.type = type || 'dendrite';
 
-    // Size varies by layer
-    const baseSize = 2 + Math.random() * 4;
-    this.size = baseSize * DEPTH_LAYERS[this.layer].size * (1 + Math.random() * 0.5);
+    // Size varies by layer and user setting
+    const baseSize = (config.snowFlakeMaxRadius / 3) + Math.random() * (config.snowFlakeMaxRadius / 2);
+    this.size = baseSize * DEPTH_LAYERS[this.layer].size;
 
     // Physics properties
     this.vx = 0;
@@ -301,36 +331,42 @@
     ctx.restore();
   };
 
-  Snowflake.prototype.update = function() {
+  Snowflake.prototype.update = function(deltaTime) {
+    // Normalize delta time to prevent large jumps
+    const normalizedDelta = Math.min(deltaTime, 0.1); // Cap at 100ms
+
     const layer = DEPTH_LAYERS[this.layer];
 
-    // Apply gravity based on layer
-    const gravityEffect = config.gravity * layer.speed;
-    this.vy += gravityEffect * (config.snowSpeed / 100);
+    // Apply gravity based on layer (frame-rate independent)
+    const gravityEffect = config.gravity * (config.snowSpeed / 100);
+    this.vy += gravityEffect * normalizedDelta * 60; // 60 is the baseline FPS
 
     // Wind with gusts
     updateWindGusts();
     const currentWind = calculateCurrentWind();
 
     // Wind effect with turbulence
+    // Apply wind effect more directly, similar to gravity
     const windEffectX = currentWind.speed * Math.cos(currentWind.direction);
     const windEffectY = currentWind.speed * Math.sin(currentWind.direction) * 0.3;
 
     // Add turbulence
-    const turbulenceX = Math.sin(Date.now() * 0.001 + this.phase) * config.turbulence * 50;
-    const turbulenceY = Math.abs(Math.sin(Date.now() * 0.001 + this.phase)) * 10;
+    const time = Date.now() * 0.001;
+    const turbulenceX = Math.sin(time + this.phase) * config.turbulence * 50;
+    const turbulenceY = Math.abs(Math.sin(time + this.phase)) * 10;
 
     // Swirling effect
-    const swirlX = Math.sin(Date.now() * 0.001 + this.phase) * this.swirlAmplitude;
-    const swirlY = Math.cos(Date.now() * 0.001 + this.phase) * this.swirlAmplitude * 0.5;
+    const swirlX = Math.sin(time + this.phase) * this.swirlAmplitude;
+    const swirlY = Math.cos(time + this.phase) * this.swirlAmplitude * 0.5;
 
-    // Combine forces
-    this.vx += (windEffectX + turbulenceX + swirlX) * 0.01;
-    this.vy += (windEffectY + turbulenceY + swirlY) * 0.01;
+    // Combine forces - apply wind effect with proper scaling
+    // Wind should be frame-rate independent like gravity
+    this.vx += (windEffectX * normalizedDelta * 60) + (turbulenceX + swirlX) * normalizedDelta;
+    this.vy += (windEffectY * normalizedDelta * 60) + (turbulenceY + swirlY) * normalizedDelta * 0.3;
 
     // Apply drag
-    this.vx *= (1 - this.drag);
-    this.vy *= (1 - this.drag);
+    this.vx *= (1 - this.drag * normalizedDelta * 60);
+    this.vy *= (1 - this.drag * normalizedDelta * 60);
 
     // Limit velocity
     const currentSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
@@ -344,7 +380,7 @@
     this.y += this.vy * layer.speed;
 
     // Update rotation
-    this.rotation += this.rotationSpeed;
+    this.rotation += this.rotationSpeed * normalizedDelta * 60;
 
     // Handle boundaries
     if (this.y > canvas.height + 10) {
@@ -381,8 +417,11 @@
 
   function calculateCurrentWind() {
     const now = Date.now();
-    let totalWindX = config.windSpeed * Math.cos(config.windDirection);
-    let totalWindY = config.windSpeed * Math.sin(config.windDirection);
+    // Convert slider value (0-100) to wind force
+    // Increased multiplier to make wind effect more noticeable
+    const windForce = config.windSpeed / 5; // Scale down for reasonable effect
+    let totalWindX = windForce * Math.cos(config.windDirection);
+    let totalWindY = windForce * Math.sin(config.windDirection);
 
     // Add gust contributions
     windGusts.forEach(function(gust) {
@@ -429,13 +468,65 @@
     start();
   }
 
+  function showPanel() {
+    if (controlElement) {
+      // Clear any existing timeout
+      if (hidePanelTimeout) {
+        clearTimeout(hidePanelTimeout);
+        hidePanelTimeout = null;
+      }
+      // Show panel immediately
+      controlElement.style.opacity = 1;
+    }
+  }
+
+  function hidePanel() {
+    if (controlElement) {
+      // Check if tips have been dismissed - if not, keep panel visible
+      const tipsClicked = localStorage.getItem("tips-button-clicked");
+      if (tipsClicked !== "1") {
+        return; // Don't hide if tips haven't been dismissed
+      }
+
+      // Clear any existing timeout
+      if (hidePanelTimeout) {
+        clearTimeout(hidePanelTimeout);
+        hidePanelTimeout = null;
+      }
+      // Hide panel after 2 seconds
+      hidePanelTimeout = setTimeout(function() {
+        if (controlElement) {
+          controlElement.style.opacity = 0;
+        }
+        hidePanelTimeout = null;
+      }, 2000);
+    }
+  }
+
   function initializeUI() {
     controlElement = document.getElementById("control");
     tipsElement = document.getElementById("tips");
     tipsButton = document.getElementById("tips-button");
 
+    // Setup panel visibility on mouse enter/leave
+    if (controlElement) {
+      controlElement.addEventListener("mouseenter", showPanel);
+      controlElement.addEventListener("mouseleave", hidePanel);
+    }
+
+    // Show panel when mouse is near the bottom of the screen
+    document.addEventListener("mousemove", function(e) {
+      // Check if mouse is within 100px from the bottom
+      if (window.innerHeight - e.clientY <= 100) {
+        showPanel();
+      }
+    });
+
     // Setup all controls
     setupAllControls();
+
+    // Update UI to reflect loaded settings (after event listeners are attached)
+    setTimeout(updateUIFromConfig, 0);
 
     // Handle tips
     handleTips();
@@ -443,22 +534,22 @@
 
   function setupAllControls() {
     // Get all control elements
-    qualitySelector = document.getElementById("qualitySelector");
     windSpeedSlider = document.getElementById("windSpeedSlider");
     windDirectionSlider = document.getElementById("windDirectionSlider");
     snowIntensitySlider = document.getElementById("snowIntensitySlider");
     blurToggle = document.getElementById("blurToggle");
-    snowflakeTypeSelector = document.getElementById("snowflakeTypeSelector");
-    const toggleButton = document.getElementById("toggleAdvanced");
-
-    // Quality selector
-    if (qualitySelector) {
-      qualitySelector.addEventListener("change", function() {
-        config.quality = this.value;
-        applyQualityPreset();
-        recreateParticles();
+    
+    // Frame rate radio buttons
+    const qualityRadios = document.querySelectorAll('input[name="quality"]');
+    qualityRadios.forEach(radio => {
+      radio.addEventListener("change", function() {
+        if (this.checked) {
+          config.quality = this.value;
+          applyFrameRatePreset();
+          saveSettings();
+        }
       });
-    }
+    });
 
     // Speed slider
     const speedSlider = document.getElementById("snowSpeedSlider");
@@ -467,6 +558,7 @@
       speedSlider.addEventListener("input", function() {
         config.snowSpeed = parseInt(this.value);
         speedValue.textContent = this.value;
+        saveSettings();
       });
     }
 
@@ -477,6 +569,8 @@
       sizeSlider.addEventListener("input", function() {
         config.snowFlakeMaxRadius = parseInt(this.value);
         sizeValue.textContent = this.value;
+        recreateParticles(); // Recreate particles with new size
+        saveSettings();
       });
     }
 
@@ -484,17 +578,22 @@
     const windSpeedValue = document.getElementById("windSpeedValue");
     if (windSpeedSlider && windSpeedValue) {
       windSpeedSlider.addEventListener("input", function() {
-        config.windSpeed = parseInt(this.value) / 20;
+        config.windSpeed = parseInt(this.value);
         windSpeedValue.textContent = this.value;
+        saveSettings();
       });
     }
 
     // Wind direction
+    windDirectionArrow = document.getElementById("windDirectionArrow");
     const windDirectionValue = document.getElementById("windDirectionValue");
     if (windDirectionSlider && windDirectionValue) {
       windDirectionSlider.addEventListener("input", function() {
-        config.windDirection = (parseInt(this.value) * Math.PI) / 180;
-        windDirectionValue.textContent = this.value + "°";
+        const degrees = parseInt(this.value);
+        config.windDirection = (degrees * Math.PI) / 180;
+        windDirectionValue.textContent = degrees + "°";
+        updateWindArrow(degrees);
+        saveSettings();
       });
     }
 
@@ -505,6 +604,7 @@
         config.particleCount = parseInt(this.value);
         snowDensityValue.textContent = this.value;
         recreateParticles();
+        saveSettings();
       });
     }
 
@@ -512,24 +612,27 @@
     if (blurToggle) {
       blurToggle.addEventListener("change", function(e) {
         config.blurEnabled = e.target.checked;
+        saveSettings();
       });
     }
 
-    // Snowflake type
-    if (snowflakeTypeSelector) {
-      snowflakeTypeSelector.addEventListener("change", function(e) {
-        config.snowflakeType = e.target.value;
-        updateSnowflakeTypes();
+    // Snowflake type radio buttons
+    const snowflakeTypeRadios = document.querySelectorAll('input[name="snowflakeType"]');
+    snowflakeTypeRadios.forEach(radio => {
+      radio.addEventListener("change", function() {
+        if (this.checked) {
+          config.snowflakeType = this.value;
+          updateSnowflakeTypes();
+          saveSettings();
+        }
       });
-    }
+    });
 
-    // Toggle advanced section
-    if (toggleButton) {
-      toggleButton.addEventListener("click", function() {
-        const advancedSection = document.getElementById("advancedSection");
-        const isVisible = advancedSection.style.display !== "none";
-        advancedSection.style.display = isVisible ? "none" : "block";
-        toggleButton.textContent = isVisible ? "▼ More Settings" : "▲ Less Settings";
+    // Reset to defaults button
+    const resetButton = document.getElementById("resetToDefaultsButton");
+    if (resetButton) {
+      resetButton.addEventListener("click", function() {
+        resetToDefaults();
       });
     }
   }
@@ -540,13 +643,13 @@
     const tipsClicked = localStorage.getItem("tips-button-clicked");
     if (tipsClicked !== "1") {
       tipsElement.style.visibility = "visible";
-      if (controlElement) controlElement.style.opacity = 1;
+      showPanel();
     }
 
     tipsButton.addEventListener("click", function() {
       localStorage.setItem("tips-button-clicked", "1");
       tipsElement.style.visibility = "hidden";
-      if (controlElement) controlElement.style.removeProperty("opacity");
+      hidePanel();
     });
   }
 
@@ -604,12 +707,22 @@
     createParticles();
   }
 
-  function applyQualityPreset() {
-    const preset = QUALITY_PRESETS[config.quality];
-    if (preset) {
-      config.particleCount = preset.particleCount;
-      config.blurEnabled = preset.blur;
-      config.targetFPS = preset.frameRate;
+  function updateWindArrow(degrees) {
+    if (windDirectionArrow) {
+      // Rotate arrow to point in wind direction
+      // Arrow starts pointing up (north), so we need to adjust:
+      // 0° wind = blows right = arrow should point right (90deg rotation)
+      // 90° wind = blows down = arrow should point down (180deg rotation)
+      // 180° wind = blows left = arrow should point left (270deg rotation)
+      // Formula: rotation = degrees + 90 (to convert from wind direction to arrow rotation)
+      windDirectionArrow.style.transform = 'rotate(' + (degrees + 90) + 'deg)';
+    }
+  }
+
+  function applyFrameRatePreset() {
+    const frameRate = FRAME_RATE_PRESETS[config.quality];
+    if (frameRate) {
+      config.frameDelay = 1000 / frameRate;
     }
   }
 
@@ -620,7 +733,36 @@
         const parsed = JSON.parse(settings);
         if (parsed.quality) {
           config.quality = parsed.quality;
-          applyQualityPreset();
+          applyFrameRatePreset();
+        }
+        if (parsed.frameDelay !== undefined) {
+          config.frameDelay = parsed.frameDelay;
+        }
+        if (parsed.snowSpeed !== undefined) {
+          config.snowSpeed = parsed.snowSpeed;
+        }
+        if (parsed.snowFlakeMaxRadius !== undefined) {
+          config.snowFlakeMaxRadius = parsed.snowFlakeMaxRadius;
+        }
+        if (parsed.windSpeed !== undefined) {
+          config.windSpeed = parsed.windSpeed;
+        }
+        if (parsed.windDirection !== undefined) {
+          // Clamp wind direction to 0-180 degrees (0 to π radians)
+          let degrees = parsed.windDirection * 180 / Math.PI;
+          degrees = Math.max(0, Math.min(180, degrees));
+          config.windDirection = (degrees * Math.PI) / 180;
+        }
+        if (parsed.particleCount !== undefined) {
+          config.particleCount = parsed.particleCount;
+        }
+        if (parsed.blurEnabled !== undefined) {
+          config.blurEnabled = parsed.blurEnabled;
+        }
+        if (parsed.snowflakeType !== undefined) {
+          config.snowflakeType = parsed.snowflakeType;
+        } else {
+          config.snowflakeType = 'all'; // Default to all if not saved
         }
       }
     } catch (e) {
@@ -628,15 +770,116 @@
     }
   }
 
+  function updateUIFromConfig() {
+    // Update speed slider
+    const speedSlider = document.getElementById("snowSpeedSlider");
+    const speedValue = document.getElementById("snowSpeedValue");
+    if (speedSlider && speedValue) {
+      speedSlider.value = config.snowSpeed;
+      speedValue.textContent = config.snowSpeed;
+    }
+
+    // Update size slider
+    const sizeSlider = document.getElementById("snowFlakeSizeSlider");
+    const sizeValue = document.getElementById("snowSizeValue");
+    if (sizeSlider && sizeValue) {
+      sizeSlider.value = config.snowFlakeMaxRadius;
+      sizeValue.textContent = config.snowFlakeMaxRadius;
+    }
+
+    // Update wind speed
+    const windSpeedValue = document.getElementById("windSpeedValue");
+    if (windSpeedSlider && windSpeedValue) {
+      windSpeedSlider.value = config.windSpeed;
+      windSpeedValue.textContent = Math.round(config.windSpeed);
+    }
+
+    // Update wind direction
+    const windDirectionValue = document.getElementById("windDirectionValue");
+    if (windDirectionSlider && windDirectionValue) {
+      let degrees = Math.round(config.windDirection * 180 / Math.PI);
+      // Clamp to 0-180 range
+      degrees = Math.max(0, Math.min(180, degrees));
+      windDirectionSlider.value = degrees;
+      windDirectionValue.textContent = degrees + '°';
+      // Update config to match clamped value
+      config.windDirection = (degrees * Math.PI) / 180;
+      // Update arrow rotation
+      updateWindArrow(degrees);
+    }
+
+    // Update intensity
+    const intensityValue = document.getElementById("snowDensityValue");
+    if (snowIntensitySlider && intensityValue) {
+      snowIntensitySlider.value = config.particleCount;
+      intensityValue.textContent = config.particleCount;
+    }
+
+    // Update blur toggle
+    if (blurToggle) {
+      blurToggle.checked = config.blurEnabled;
+    }
+
+    // Update snowflake type radio buttons
+    const snowflakeTypeRadiosUpdate = document.querySelectorAll('input[name="snowflakeType"]');
+    snowflakeTypeRadiosUpdate.forEach(radio => {
+      radio.checked = radio.value === config.snowflakeType;
+    });
+    // Update snowflake types to match the loaded setting
+    updateSnowflakeTypes();
+
+    // Update quality radio buttons
+    const qualityRadios = document.querySelectorAll('input[name="quality"]');
+    qualityRadios.forEach(radio => {
+      radio.checked = radio.value === config.quality;
+    });
+  }
+
+  function resetToDefaults() {
+    // Reset config to default values
+    config.quality = DEFAULT_CONFIG.quality;
+    config.particleCount = DEFAULT_CONFIG.particleCount;
+    config.gravity = DEFAULT_CONFIG.gravity;
+    config.windSpeed = DEFAULT_CONFIG.windSpeed;
+    config.windDirection = DEFAULT_CONFIG.windDirection;
+    config.turbulence = DEFAULT_CONFIG.turbulence;
+    config.snowSpeed = DEFAULT_CONFIG.snowSpeed;
+    config.snowFlakeMaxRadius = DEFAULT_CONFIG.snowFlakeMaxRadius;
+    config.blurEnabled = DEFAULT_CONFIG.blurEnabled;
+    config.snowColor = DEFAULT_CONFIG.snowColor;
+    config.backgroundColor = DEFAULT_CONFIG.backgroundColor;
+    config.snowflakeType = DEFAULT_CONFIG.snowflakeType;
+    config.frameDelay = DEFAULT_CONFIG.frameDelay;
+
+    // Apply frame rate preset
+    applyFrameRatePreset();
+
+    // Recreate particles with new settings
+    recreateParticles();
+
+    // Update UI
+    updateUIFromConfig();
+
+    // Update arrow
+    const degrees = Math.round(config.windDirection * 180 / Math.PI);
+    updateWindArrow(degrees);
+
+    // Save settings
+    saveSettings();
+  }
+
   function saveSettings() {
     try {
       const settings = {
         quality: config.quality,
+        frameDelay: config.frameDelay,
         windSpeed: config.windSpeed,
         windDirection: config.windDirection,
         particleCount: config.particleCount,
         blurEnabled: config.blurEnabled,
-        snowflakeType: config.snowflakeType
+        snowflakeType: config.snowflakeType,
+        snowSpeed: config.snowSpeed,
+        snowFlakeMaxRadius: config.snowFlakeMaxRadius
       };
       localStorage.setItem('snowSimulationSettings', JSON.stringify(settings));
     } catch (e) {
@@ -644,8 +887,20 @@
     }
   }
 
-  function animate() {
+  let lastFrameTime = 0;
+
+  function animate(currentTime) {
     if (!isRunning) return;
+
+    // Frame rate limiting
+    if (currentTime - lastFrameTime < config.frameDelay) {
+      animationId = requestAnimationFrame(animate);
+      return;
+    }
+
+    // Calculate delta time in seconds
+    const deltaTime = (currentTime - lastFrameTime) / 1000;
+    lastFrameTime = currentTime;
 
     // Clear canvas
     ctx.fillStyle = config.backgroundColor;
@@ -659,7 +914,7 @@
 
     // Update and draw particles
     particles.forEach(function(particle) {
-      particle.update();
+      particle.update(deltaTime);
       particle.draw();
     });
 
@@ -669,7 +924,8 @@
   function start() {
     if (isRunning) return;
     isRunning = true;
-    animate();
+    lastFrameTime = performance.now();
+    animate(lastFrameTime);
   }
 
   function stop() {
@@ -698,6 +954,7 @@
     start: start,
     stop: stop,
     config: config,
-    saveSettings: saveSettings
+    saveSettings: saveSettings,
+    resetToDefaults: resetToDefaults
   };
 })();

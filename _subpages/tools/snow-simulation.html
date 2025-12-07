@@ -38,10 +38,6 @@ permalink: /snow/
             max-width: 400px;
         }
 
-        .control:hover {
-            opacity: 1;
-        }
-
         .control-row {
             display: flex;
             align-items: center;
@@ -51,8 +47,26 @@ permalink: /snow/
 
         .control-label {
             font-size: 11px;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             min-width: 60px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wind-arrow {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+            vertical-align: middle;
+        }
+
+        .wind-arrow svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
         }
 
         .slider-container {
@@ -71,9 +85,10 @@ permalink: /snow/
 
         .slider-value {
             font-size: 10px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.8);
             min-width: 35px;
             text-align: right;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
 
         .quality-select, .type-select {
@@ -92,15 +107,16 @@ permalink: /snow/
         }
 
         .advanced-section {
-            display: none;
+            display: block;
         }
 
         .group-title {
             font-size: 11px;
             font-weight: bold;
-            color: #555;
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 8px;
             margin-top: 10px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
 
         .toggle-button {
@@ -119,11 +135,30 @@ permalink: /snow/
             background-color: #f0f0f0;
         }
 
+        .reset-button {
+            width: 100%;
+            padding: 6px 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .reset-button:hover {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
         .tips {
             position: fixed;
-            left: 20px;
-            bottom: 110px;
-            width: 300px;
+            left: 460px;
+            bottom: 120px;
+            width: 200px;
             color: #fff;
             background-color: #ffffff30;
             padding: 15px;
@@ -151,68 +186,174 @@ permalink: /snow/
             width: 14px;
             height: 14px;
         }
+
+        .radio-group {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 4px;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .radio-label span {
+            cursor: pointer;
+        }
+
+        .flake-type-group {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .flake-type-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .flake-type-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .flake-type-option input[type="radio"] {
+            display: none;
+        }
+
+        .flake-type-option input[type="radio"]:checked + span {
+            color: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .flake-type-option input[type="radio"]:checked ~ .flake-type-option {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .flake-type-option:has(input:checked) {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .flake-icon {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .flake-type-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0 8px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 <body>
     <div class="tips" id="tips">
-        <div class="note">Control snow speed, size, and density. Expand "More Settings" for wind and visual options.</div>
-        <div class="note">👇</div>
+        <div class="note">The panel will automatically disappear. Hover at the bottom to show it again.</div>
+        <div class="note">👈</div>
         <span class="confirm-button" id="tips-button">Got It!</span>
     </div>
 
     <div class="control" id="control">
-        <div class="control-row">
-            <label class="control-label">Speed:</label>
-            <div class="slider-container">
-                <input type="range" min="100" max="800" value="100" step="50" id="snowSpeedSlider">
-                <span class="slider-value" id="snowSpeedValue">100</span>
-            </div>
-        </div>
+        <button class="reset-button" id="resetToDefaultsButton">Reset to Default</button>
         <div class="control-row">
             <label class="control-label">Size:</label>
             <div class="slider-container">
-                <input type="range" min="5" max="20" value="5" id="snowFlakeSizeSlider">
-                <span class="slider-value" id="snowSizeValue">5</span>
+                <input type="range" min="5" max="100" value="22" id="snowFlakeSizeSlider">
+                <span class="slider-value" id="snowSizeValue">22</span>
             </div>
         </div>
         <div class="control-row">
-            <label class="control-label">Quality:</label>
-            <select id="qualitySelector" class="quality-select">
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-                <option value="ultra">Ultra</option>
-            </select>
+            <label class="control-label">Frame Rate:</label>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="quality" value="low">
+                    <span>30 FPS</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="quality" value="medium" checked>
+                    <span>45 FPS</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="quality" value="high">
+                    <span>60 FPS</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="quality" value="ultra">
+                    <span>120 FPS</span>
+                </label>
+            </div>
         </div>
 
         <div class="control-divider"></div>
 
         <div class="advanced-section" id="advancedSection">
             <div class="control-group">
-                <div class="group-title">Wind Controls</div>
+                <div class="group-title">Fall Path</div>
                 <div class="control-row">
-                    <label class="control-label">Speed:</label>
+                    <label class="control-label">Gravity:</label>
+                    <div class="slider-container">
+                        <input type="range" min="100" max="800" value="500" step="50" id="snowSpeedSlider">
+                        <span class="slider-value" id="snowSpeedValue">500</span>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">Wind Strength:</label>
                     <div class="slider-container">
                         <input type="range" min="0" max="100" value="0" id="windSpeedSlider">
                         <span class="slider-value" id="windSpeedValue">0</span>
                     </div>
                 </div>
                 <div class="control-row">
-                    <label class="control-label">Direction:</label>
+                    <label class="control-label">
+                        Direction:
+                        <span class="wind-arrow" id="windDirectionArrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                                <polyline points="8 6 12 2 16 6"></polyline>
+                            </svg>
+                        </span>
+                    </label>
                     <div class="slider-container">
-                        <input type="range" min="0" max="360" value="0" id="windDirectionSlider">
-                        <span class="slider-value" id="windDirectionValue">0°</span>
+                        <input type="range" min="0" max="180" value="90" id="windDirectionSlider">
+                        <span class="slider-value" id="windDirectionValue">90°</span>
                     </div>
                 </div>
             </div>
+
+            <div class="control-divider"></div>
 
             <div class="control-group">
                 <div class="group-title">Visual Settings</div>
                 <div class="control-row">
                     <label class="control-label">Density:</label>
                     <div class="slider-container">
-                        <input type="range" min="100" max="1000" value="300" id="snowIntensitySlider">
-                        <span class="slider-value" id="snowDensityValue">300</span>
+                        <input type="range" min="100" max="1000" value="500" id="snowIntensitySlider">
+                        <span class="slider-value" id="snowDensityValue">500</span>
                     </div>
                 </div>
                 <div class="control-row">
@@ -223,21 +364,41 @@ permalink: /snow/
                 </div>
                 <div class="control-row">
                     <label class="control-label">Flake Type:</label>
-                    <select id="snowflakeTypeSelector" class="type-select">
-                        <option value="all" selected>All</option>
-                        <option value="dendrite">Dendrite</option>
-                        <option value="stellar">Stellar</option>
-                        <option value="hexagon">Hexagon</option>
-                        <option value="needle">Needle</option>
-                        <option value="column">Column</option>
-                        <option value="irregular">Irregular</option>
-                    </select>
+                    <div class="flake-type-group">
+                        <label class="flake-type-option" style="width: auto; padding: 0 12px;">
+                            <input type="radio" name="snowflakeType" value="all">
+                            <span class="flake-type-label">All</span>
+                        </label>
+                        <label class="flake-type-option" title="Dendrite">
+                            <input type="radio" name="snowflakeType" value="dendrite" checked>
+                            <span class="flake-icon">❄</span>
+                        </label>
+                        <label class="flake-type-option" title="Stellar">
+                            <input type="radio" name="snowflakeType" value="stellar">
+                            <span class="flake-icon">❅</span>
+                        </label>
+                        <label class="flake-type-option" title="Hexagon">
+                            <input type="radio" name="snowflakeType" value="hexagon">
+                            <span class="flake-icon">✦</span>
+                        </label>
+                        <label class="flake-type-option" title="Needle">
+                            <input type="radio" name="snowflakeType" value="needle">
+                            <span class="flake-icon">✱</span>
+                        </label>
+                        <label class="flake-type-option" title="Column">
+                            <input type="radio" name="snowflakeType" value="column">
+                            <span class="flake-icon">✤</span>
+                        </label>
+                        <label class="flake-type-option" title="Irregular">
+                            <input type="radio" name="snowflakeType" value="irregular">
+                            <span class="flake-icon">✻</span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <button class="toggle-button" id="toggleAdvanced">▼ More Settings</button>
-    </div>
+      </div>
 
     <canvas id="snow"></canvas>
     <script src="/assets/tools/source/snow.simulation.enhanced.js"></script>
