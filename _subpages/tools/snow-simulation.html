@@ -25,17 +25,29 @@ permalink: /snow/
             width: 100vw;
         }
 
-        .control {
+        .control-container {
             position: fixed;
-            margin: 0 0 20px 20px;
             bottom: 0;
+            left: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .control {
             background-color: #ffffff30;
             padding: 15px;
             border-radius: 12px;
             opacity: 0;
-            transition: opacity 0.6s linear;
+            transition: opacity 0.6s linear !important;
+            will-change: opacity;
             min-width: 300px;
             max-width: 400px;
+        }
+
+        .control.visible {
+            opacity: 1;
         }
 
         .control-row {
@@ -154,10 +166,17 @@ permalink: /snow/
             border-color: #999;
         }
 
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
         .tips {
-            position: fixed;
-            left: 460px;
-            bottom: 120px;
             width: 200px;
             color: #fff;
             background-color: #ffffff30;
@@ -272,14 +291,12 @@ permalink: /snow/
     </style>
 </head>
 <body>
-    <div class="tips" id="tips">
-        <div class="note">The panel will automatically disappear. Hover at the bottom to show it again.</div>
-        <div class="note">👈</div>
-        <span class="confirm-button" id="tips-button">Got It!</span>
-    </div>
-
-    <div class="control" id="control">
-        <button class="reset-button" id="resetToDefaultsButton">Reset to Default</button>
+    <div class="control-container" id="snow-simulation-control-container">
+        <div class="control visible" id="snow-simulation-control-panel">
+        <div class="button-group">
+            <button class="reset-button" id="playPauseButton">Stop</button>
+            <button class="reset-button" id="resetToDefaultsButton">Reset to Default</button>
+        </div>
         <div class="control-row">
             <label class="control-label">Size:</label>
             <div class="slider-container">
@@ -287,29 +304,6 @@ permalink: /snow/
                 <span class="slider-value" id="snowSizeValue">22</span>
             </div>
         </div>
-        <div class="control-row">
-            <label class="control-label">Frame Rate:</label>
-            <div class="radio-group">
-                <label class="radio-label">
-                    <input type="radio" name="quality" value="low">
-                    <span>30 FPS</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="quality" value="medium" checked>
-                    <span>45 FPS</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="quality" value="high">
-                    <span>60 FPS</span>
-                </label>
-                <label class="radio-label">
-                    <input type="radio" name="quality" value="ultra">
-                    <span>120 FPS</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="control-divider"></div>
 
         <div class="advanced-section" id="advancedSection">
             <div class="control-group">
@@ -352,7 +346,7 @@ permalink: /snow/
                 <div class="control-row">
                     <label class="control-label">Density:</label>
                     <div class="slider-container">
-                        <input type="range" min="100" max="1000" value="500" id="snowIntensitySlider">
+                        <input type="range" min="100" max="1000" value="500" step="50" id="snowIntensitySlider">
                         <span class="slider-value" id="snowDensityValue">500</span>
                     </div>
                 </div>
@@ -385,10 +379,6 @@ permalink: /snow/
                             <input type="radio" name="snowflakeType" value="needle">
                             <span class="flake-icon">✱</span>
                         </label>
-                        <label class="flake-type-option" title="Column">
-                            <input type="radio" name="snowflakeType" value="column">
-                            <span class="flake-icon">✤</span>
-                        </label>
                         <label class="flake-type-option" title="Irregular">
                             <input type="radio" name="snowflakeType" value="irregular">
                             <span class="flake-icon">✻</span>
@@ -398,7 +388,14 @@ permalink: /snow/
             </div>
         </div>
 
-      </div>
+        </div>
+
+        <div class="tips" id="tips">
+            <div class="note">The panel will automatically disappear. Hover at the bottom to show it again.</div>
+            <div class="note">👈</div>
+            <span class="confirm-button" id="tips-button">Got It!</span>
+        </div>
+    </div>
 
     <canvas id="snow"></canvas>
     <script src="/assets/tools/source/snow.simulation.enhanced.js"></script>

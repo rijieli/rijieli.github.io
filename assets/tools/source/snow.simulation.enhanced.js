@@ -15,8 +15,6 @@
 
   // Default configuration values
   const DEFAULT_CONFIG = {
-    // Quality settings
-    quality: 'medium',
     particleCount: 500, // density
 
     // Physics
@@ -35,16 +33,11 @@
     backgroundColor: '#000000',
 
     // Snowflake types
-    snowflakeType: 'dendrite', // 'all' or specific type
-
-    // Frame rate
-    frameDelay: 1000 / 45 // Default 45 FPS (medium)
+    snowflakeType: 'dendrite' // 'all' or specific type
   };
 
   // Configuration
   let config = {
-    // Quality settings
-    quality: DEFAULT_CONFIG.quality,
     particleCount: DEFAULT_CONFIG.particleCount,
 
     // Physics
@@ -63,18 +56,7 @@
     backgroundColor: DEFAULT_CONFIG.backgroundColor,
 
     // Snowflake types
-    snowflakeType: DEFAULT_CONFIG.snowflakeType,
-
-    // Frame rate
-    frameDelay: DEFAULT_CONFIG.frameDelay
-  };
-
-  // Frame rate presets
-  const FRAME_RATE_PRESETS = {
-    low: 30,
-    medium: 45,
-    high: 60,
-    ultra: 120
+    snowflakeType: DEFAULT_CONFIG.snowflakeType
   };
 
   // Depth layers for parallax
@@ -83,6 +65,9 @@
     midground: { speed: 0.9, size: 0.6, opacity: 0.7, blur: 1, particleRatio: 0.3 },
     foreground: { speed: 1.2, size: 1.0, opacity: 1.0, blur: 0, particleRatio: 0.2 }
   };
+
+  // Available snowflake types
+  const AVAILABLE_SNOWFLAKE_TYPES = ['dendrite', 'stellar', 'hexagon', 'needle', 'irregular'];
 
   // UI Elements
   let controlElement, tipsElement, tipsButton;
@@ -195,27 +180,22 @@
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
+    // Draw four-pointed star (✦ icon)
+    const points = 4;
+    const outerRadius = size;
+    const innerRadius = size * 0.4;
+
     ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3;
-      const px = Math.cos(angle) * size;
-      const py = Math.sin(angle) * size;
+    for (let i = 0; i < points * 2; i++) {
+      const radius = i % 2 === 0 ? outerRadius : innerRadius;
+      const angle = (i * Math.PI) / points;
+      const px = Math.cos(angle) * radius;
+      const py = Math.sin(angle) * radius;
       if (i === 0) ctx.moveTo(px, py);
       else ctx.lineTo(px, py);
     }
     ctx.closePath();
     ctx.fill();
-
-    // Inner detail
-    ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3;
-      const px = Math.cos(angle) * size * 0.5;
-      const py = Math.sin(angle) * size * 0.5;
-      if (i === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    }
-    ctx.closePath();
     ctx.stroke();
 
     ctx.restore();
@@ -226,31 +206,27 @@
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
+    // Draw asterisk/star pattern (✱ icon)
+    const arms = 8;
+    const armLength = size;
+    const centerRadius = size * 0.15;
+
+    // Draw center circle
     ctx.beginPath();
-    ctx.moveTo(0, -size);
-    ctx.quadraticCurveTo(size * 0.1, 0, 0, size);
-    ctx.quadraticCurveTo(-size * 0.1, 0, 0, -size);
+    ctx.arc(0, 0, centerRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.restore();
-  };
-
-  Snowflake.prototype.drawColumn = function(x, y, size, rotation) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(rotation);
-
+    // Draw radiating arms
     ctx.beginPath();
-    ctx.rect(-size * 0.15, -size, size * 0.3, size * 2);
-    ctx.fill();
-
-    // Hexagonal ends
-    ctx.beginPath();
-    ctx.rect(-size * 0.25, -size * 1.1, size * 0.5, size * 0.2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.rect(-size * 0.25, size * 0.9, size * 0.5, size * 0.2);
-    ctx.fill();
+    for (let i = 0; i < arms; i++) {
+      const angle = (i * Math.PI * 2) / arms;
+      const endX = Math.cos(angle) * armLength;
+      const endY = Math.sin(angle) * armLength;
+      if (i === 0) ctx.moveTo(endX, endY);
+      else ctx.lineTo(endX, endY);
+      ctx.lineTo(0, 0);
+    }
+    ctx.stroke();
 
     ctx.restore();
   };
@@ -260,28 +236,46 @@
     ctx.translate(x, y);
     ctx.rotate(rotation);
 
-    // Create irregular shape with random branches
-    const branches = 3 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < branches; i++) {
-      const angle = (Math.PI * 2 * i) / branches + (Math.random() - 0.5) * 0.5;
-      const length = size * (0.7 + Math.random() * 0.3);
+    // Draw six-pointed sparkle (✻ icon) - multiple layers for sparkle effect
+    const points = 6;
+    
+    // Outer sparkle layer - larger points
+    const outerRadius1 = size;
+    const innerRadius1 = size * 0.4;
+    
+    // Inner sparkle layer - smaller points
+    const outerRadius2 = size * 0.6;
+    const innerRadius2 = size * 0.2;
 
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      const endX = Math.cos(angle) * length;
-      const endY = Math.sin(angle) * length;
-      ctx.quadraticCurveTo(
-        (Math.random() - 0.5) * size,
-        (Math.random() - 0.5) * size,
-        endX,
-        endY
-      );
-      ctx.stroke();
-    }
-
-    // Small central cluster
+    // Draw outer six-pointed star
     ctx.beginPath();
-    ctx.arc(0, 0, size * 0.2, 0, Math.PI * 2);
+    for (let i = 0; i < points * 2; i++) {
+      const radius = i % 2 === 0 ? outerRadius1 : innerRadius1;
+      const angle = (i * Math.PI) / points;
+      const px = Math.cos(angle) * radius;
+      const py = Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw inner six-pointed star (rotated slightly)
+    ctx.beginPath();
+    for (let i = 0; i < points * 2; i++) {
+      const radius = i % 2 === 0 ? outerRadius2 : innerRadius2;
+      const angle = (i * Math.PI) / points + Math.PI / (points * 2);
+      const px = Math.cos(angle) * radius;
+      const py = Math.sin(angle) * radius;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    // Center dot
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.1, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
@@ -314,9 +308,6 @@
         break;
       case 'needle':
         this.drawNeedle(this.x, this.y, this.size * layer.size, this.rotation);
-        break;
-      case 'column':
-        this.drawColumn(this.x, this.y, this.size * layer.size, this.rotation);
         break;
       case 'irregular':
         this.drawIrregular(this.x, this.y, this.size * layer.size, this.rotation);
@@ -475,8 +466,7 @@
         clearTimeout(hidePanelTimeout);
         hidePanelTimeout = null;
       }
-      // Show panel immediately
-      controlElement.style.opacity = 1;
+      controlElement.classList.add('visible');
     }
   }
 
@@ -496,7 +486,7 @@
       // Hide panel after 2 seconds
       hidePanelTimeout = setTimeout(function() {
         if (controlElement) {
-          controlElement.style.opacity = 0;
+          controlElement.classList.remove('visible');
         }
         hidePanelTimeout = null;
       }, 2000);
@@ -504,23 +494,15 @@
   }
 
   function initializeUI() {
-    controlElement = document.getElementById("control");
+    controlElement = document.getElementById("snow-simulation-control-panel");
     tipsElement = document.getElementById("tips");
     tipsButton = document.getElementById("tips-button");
 
-    // Setup panel visibility on mouse enter/leave
+    // Setup panel visibility on mouse enter/leave of the panel itself only
     if (controlElement) {
       controlElement.addEventListener("mouseenter", showPanel);
       controlElement.addEventListener("mouseleave", hidePanel);
     }
-
-    // Show panel when mouse is near the bottom of the screen
-    document.addEventListener("mousemove", function(e) {
-      // Check if mouse is within 100px from the bottom
-      if (window.innerHeight - e.clientY <= 100) {
-        showPanel();
-      }
-    });
 
     // Setup all controls
     setupAllControls();
@@ -530,6 +512,10 @@
 
     // Handle tips
     handleTips();
+
+    // Hide panel after page loads (if tips have been dismissed)
+    // hidePanel() already has a 2-second delay built in
+    hidePanel();
   }
 
   function setupAllControls() {
@@ -539,17 +525,6 @@
     snowIntensitySlider = document.getElementById("snowIntensitySlider");
     blurToggle = document.getElementById("blurToggle");
     
-    // Frame rate radio buttons
-    const qualityRadios = document.querySelectorAll('input[name="quality"]');
-    qualityRadios.forEach(radio => {
-      radio.addEventListener("change", function() {
-        if (this.checked) {
-          config.quality = this.value;
-          applyFrameRatePreset();
-          saveSettings();
-        }
-      });
-    });
 
     // Speed slider
     const speedSlider = document.getElementById("snowSpeedSlider");
@@ -628,6 +603,19 @@
       });
     });
 
+    // Play/Pause button
+    const playPauseButton = document.getElementById("playPauseButton");
+    if (playPauseButton) {
+      updatePlayPauseButton();
+      playPauseButton.addEventListener("click", function() {
+        if (isRunning) {
+          stop();
+        } else {
+          start();
+        }
+      });
+    }
+
     // Reset to defaults button
     const resetButton = document.getElementById("resetToDefaultsButton");
     if (resetButton) {
@@ -661,23 +649,6 @@
   function createParticles() {
     particles = [];
 
-    // Determine available types based on quality
-    let availableTypes;
-    switch(config.quality) {
-      case 'low':
-        availableTypes = ['circle', 'hexagon'];
-        break;
-      case 'medium':
-        availableTypes = ['dendrite', 'stellar', 'hexagon'];
-        break;
-      case 'high':
-      case 'ultra':
-        availableTypes = ['dendrite', 'stellar', 'hexagon', 'needle', 'column', 'irregular'];
-        break;
-      default:
-        availableTypes = ['dendrite', 'stellar', 'hexagon'];
-    }
-
     // Create particles distributed across layers
     Object.keys(DEPTH_LAYERS).forEach(function(layerName) {
       const layer = DEPTH_LAYERS[layerName];
@@ -687,7 +658,7 @@
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height - canvas.height;
         const type = config.snowflakeType === 'all' ?
-          availableTypes[Math.floor(Math.random() * availableTypes.length)] :
+          AVAILABLE_SNOWFLAKE_TYPES[Math.floor(Math.random() * AVAILABLE_SNOWFLAKE_TYPES.length)] :
           config.snowflakeType;
 
         particles.push(new Snowflake(x, y, layerName, type));
@@ -697,7 +668,11 @@
 
   function updateSnowflakeTypes() {
     particles.forEach(function(particle) {
-      if (config.snowflakeType !== 'all') {
+      if (config.snowflakeType === 'all') {
+        // Assign random type to each particle
+        particle.type = AVAILABLE_SNOWFLAKE_TYPES[Math.floor(Math.random() * AVAILABLE_SNOWFLAKE_TYPES.length)];
+      } else {
+        // Assign the specific type to all particles
         particle.type = config.snowflakeType;
       }
     });
@@ -719,25 +694,12 @@
     }
   }
 
-  function applyFrameRatePreset() {
-    const frameRate = FRAME_RATE_PRESETS[config.quality];
-    if (frameRate) {
-      config.frameDelay = 1000 / frameRate;
-    }
-  }
 
   function loadSettings() {
     try {
       const settings = localStorage.getItem('snowSimulationSettings');
       if (settings) {
         const parsed = JSON.parse(settings);
-        if (parsed.quality) {
-          config.quality = parsed.quality;
-          applyFrameRatePreset();
-        }
-        if (parsed.frameDelay !== undefined) {
-          config.frameDelay = parsed.frameDelay;
-        }
         if (parsed.snowSpeed !== undefined) {
           config.snowSpeed = parsed.snowSpeed;
         }
@@ -828,11 +790,6 @@
     // Update snowflake types to match the loaded setting
     updateSnowflakeTypes();
 
-    // Update quality radio buttons
-    const qualityRadios = document.querySelectorAll('input[name="quality"]');
-    qualityRadios.forEach(radio => {
-      radio.checked = radio.value === config.quality;
-    });
   }
 
   function resetToDefaults() {
@@ -849,10 +806,6 @@
     config.snowColor = DEFAULT_CONFIG.snowColor;
     config.backgroundColor = DEFAULT_CONFIG.backgroundColor;
     config.snowflakeType = DEFAULT_CONFIG.snowflakeType;
-    config.frameDelay = DEFAULT_CONFIG.frameDelay;
-
-    // Apply frame rate preset
-    applyFrameRatePreset();
 
     // Recreate particles with new settings
     recreateParticles();
@@ -871,8 +824,6 @@
   function saveSettings() {
     try {
       const settings = {
-        quality: config.quality,
-        frameDelay: config.frameDelay,
         windSpeed: config.windSpeed,
         windDirection: config.windDirection,
         particleCount: config.particleCount,
@@ -891,12 +842,6 @@
 
   function animate(currentTime) {
     if (!isRunning) return;
-
-    // Frame rate limiting
-    if (currentTime - lastFrameTime < config.frameDelay) {
-      animationId = requestAnimationFrame(animate);
-      return;
-    }
 
     // Calculate delta time in seconds
     const deltaTime = (currentTime - lastFrameTime) / 1000;
@@ -926,6 +871,7 @@
     isRunning = true;
     lastFrameTime = performance.now();
     animate(lastFrameTime);
+    updatePlayPauseButton();
   }
 
   function stop() {
@@ -933,6 +879,14 @@
     if (animationId) {
       cancelAnimationFrame(animationId);
       animationId = null;
+    }
+    updatePlayPauseButton();
+  }
+
+  function updatePlayPauseButton() {
+    const playPauseButton = document.getElementById("playPauseButton");
+    if (playPauseButton) {
+      playPauseButton.textContent = isRunning ? "Stop" : "Start";
     }
   }
 
