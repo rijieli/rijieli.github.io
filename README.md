@@ -1,68 +1,54 @@
 # Roger's Homepage
 
-Roger's homepage powered by [Jekyll](https://jekyllrb.com), hosted on [GitHub Pages](https://pages.github.com).
+A Jekyll-powered personal website hosted at [roger.zone](https://roger.zone).
 
-## Getting Started
+## Setup
 
-1.  **Set up Ruby:** Make sure you are using Ruby `2.7.3`. If you're using `rbenv`, you can set the local Ruby version with:
-    ```bash
-    rbenv local 2.7.3
-    ```
+1. **Ruby version**: Use Ruby 2.7.3 (automatically set by `.ruby-version`)
+   ```bash
+   rbenv install 2.7.3  # if not installed
+   ```
 
-2.  **Install Dependencies:** Install the required gems.
-    ```bash
-    gem install bundler:2.3.10
-    bundle install
-    ```
+2. **Install dependencies**:
+   ```bash
+   bundle install
+   ```
 
-3.  **Run the Server:** Build the site and run a local server.
-    ```bash
-    bundle exec jekyll serve --livereload --drafts
-    ```
-    The site will be available at `http://127.0.0.1:4000/`.
+3. **Run locally**:
+   ```bash
+   bundle exec jekyll serve --livereload --drafts
+   ```
+   Visit `http://127.0.0.1:4000/` to view the site
 
-## Manage Script
+   - `--livereload`: Automatically refresh browser when files change
+   - `--drafts`: Include draft posts from `_drafts` folder
 
-Usage: `./manage.py [-cgvumwd] [input]`
+## Management Script
 
-```
--c:     create post
--g:     generate static templates
--v:     do some check job
--m:     covert a normal markdown file to jekyll format
--u:     uglify scripts in tools folder
--wd:    parse weixin article meta data
-```
+Use `./manage.py` for site management:
 
-## Template Usage
+- `./manage.py -c` - Create new post
+- `./manage.py -g` - Generate static templates
+- `./manage.py -m [file]` - Convert markdown to Jekyll format
+- `./manage.py -u` - Minify tool scripts
+- `./manage.py -v` - Run site checks
 
-Use global HTML header.
+## Project Structure
 
-```
-<head>
-  {% include head_basic.html %}
-<head>
-```
+- `_posts/` - Blog posts
+- `_includes/` - Reusable HTML components
+- `_layouts/` - Page layout templates
+- `_sass/` - SCSS stylesheets
+- `assets/` - Static assets (CSS, JS, images)
+- `_subpages/` - Additional site pages
+- `assets/tools/` - Interactive JavaScript tools
 
-## Publish Tool
+## Publishing Tools
 
-Move JavaScript file to `/assets/tools/source` then run `./manage.py -u`.
-
-```
-{%- include tool_scripts.html name="theme-color-preview" -%}
-```
-
-## Notification Template
-
-`auto-dismiss` will make it dismiss after 4 seconds.
-
-```
-<div class="notification card-background auto-dismiss">
-    <p class="notification-content" >⚠️ notification here <a href="mailto:{{ site.email }}">mail me</a>.</p>
-    <div class="notification-date">Mar 25</div>
-</div>
-```
-
-## Dependencies Versions
-
-https://pages.github.com/versions/
+To add a new JavaScript tool:
+1. Create `.js` file in `/assets/tools/source/`
+2. Run `./manage.py -u` to minify it
+3. Include in HTML with:
+   ```liquid
+   {%- include tool_scripts.html name="your-tool-name" -%}
+   ```
