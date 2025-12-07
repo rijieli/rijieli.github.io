@@ -69,6 +69,9 @@
     foreground: { speed: 1.2, size: 1.0, opacity: 1.0, blur: 0, particleRatio: 0.2 }
   };
 
+  // Fixed layer order for draw order (avoids sorting particles every frame)
+  const LAYER_ORDER = ['background', 'midground', 'foreground'];
+
   // Snowflake types configuration - stores draw function, icon, and title for each type
   const SNOWFLAKE_TYPES = {
     defaultStyle: {
@@ -560,7 +563,7 @@
     ctx.restore();
   };
 
-  Snowflake.prototype.update = function(deltaTime) {
+  Snowflake.prototype.update = function(deltaTime, currentWind) {
     // Normalize delta time to prevent large jumps
     const normalizedDelta = Math.min(deltaTime, 0.1); // Cap at 100ms
 
@@ -570,11 +573,7 @@
     const gravityEffect = config.gravity * (config.snowSpeed / 100);
     this.vy += gravityEffect * normalizedDelta * 60; // 60 is the baseline FPS
 
-    // Wind with gusts
-    updateWindGusts();
-    const currentWind = calculateCurrentWind();
-
-    // Wind effect with turbulence
+    // Wind effect with turbulence (wind vector passed from animation loop)
     // Apply wind effect more directly, similar to gravity
     const windEffectX = currentWind.speed * Math.cos(currentWind.direction);
     const windEffectY = currentWind.speed * Math.sin(currentWind.direction) * 0.3;
@@ -936,8 +935,8 @@
   function createParticles() {
     particles = [];
 
-    // Create particles distributed across layers
-    Object.keys(DEPTH_LAYERS).forEach(function(layerName) {
+    // Create particles distributed across layers in draw order (avoids sorting every frame)
+    LAYER_ORDER.forEach(function(layerName) {
       const layer = DEPTH_LAYERS[layerName];
       const count = Math.floor(config.particleCount * layer.particleRatio);
 
@@ -1134,19 +1133,20 @@
     const deltaTime = (currentTime - lastFrameTime) / 1000;
     lastFrameTime = currentTime;
 
+    // Update wind gusts once per frame (not per particle)
+    updateWindGusts();
+    const currentWind = calculateCurrentWind();
+
     // Clear canvas
     ctx.fillStyle = config.backgroundColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Sort particles by layer for proper depth rendering
-    particles.sort(function(a, b) {
-      const layerOrder = ['background', 'midground', 'foreground'];
-      return layerOrder.indexOf(a.layer) - layerOrder.indexOf(b.layer);
-    });
+    // Particles are already in draw order (created in LAYER_ORDER sequence)
+    // No need to sort every frame - this saves significant CPU time
 
     // Update and draw particles
     particles.forEach(function(particle) {
-      particle.update(deltaTime);
+      particle.update(deltaTime, currentWind);
       particle.draw();
     });
 
