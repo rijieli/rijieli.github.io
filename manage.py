@@ -8,12 +8,11 @@ Usage: ./manage.py [-cgv] [input]
 -g:     generate static templates
 -v:     do some check job
 -m:     covert a normal markdown file to jekyll format
--u:     uglify scripts in tools folder
 -wd:    parse weixin article meta data"""
 
 import csv, datetime, os, sys, re
 import shutil
-from _manage.tools import read_file, get_current_date, uglify_tools_script
+from _manage.tools import read_file, get_current_date
 
 POST_PATH = os.getcwd() + "/_posts/"
 POST_IMAGE_PATH = os.getcwd() + "/assets/img/posts/"
@@ -186,8 +185,6 @@ if __name__ == "__main__":
         generate_site()
     elif system_args[1] == "-v":
         do_check()
-    elif system_args[1] == "-u":
-        uglify_tools_script()
     elif system_args[1] == "-m":
         modify_post(system_args[2])
     elif system_args[1] == "-wd":

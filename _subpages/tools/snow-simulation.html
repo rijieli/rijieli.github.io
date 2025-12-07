@@ -25,57 +25,160 @@ permalink: /snow/
             width: 100vw;
         }
 
-        .control {
+        .control-container {
             position: fixed;
-            margin: 0 0 20px 20px;
             bottom: 0;
+            left: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .control {
             background-color: #ffffff30;
-            height: 50px;
             padding: 15px;
             border-radius: 12px;
             opacity: 0;
-            transition:opacity 0.6s linear;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
+            transition: opacity 0.6s linear !important;
+            will-change: opacity;
+            width: 350px;
         }
 
-        .control:hover {
+        .control.visible {
             opacity: 1;
         }
 
-        .control .slider {
-            width: 11vw;
-            min-width: 160px;
-            height: 20px;
+        .control-row {
             display: flex;
-            flex-direction: row;
             align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
         }
 
-        .control .slider svg {
-            margin-right: 10px;
-            flex-shrink: 0;
+        .control-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            min-width: 60px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .control .slider input {
+        .wind-arrow {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+            vertical-align: middle;
+        }
+
+        .wind-arrow svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
             flex: 1;
+            gap: 8px;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 3px;
             background: #fff;
-            color: #fff;
+            outline: none;
+        }
+
+        .slider-value {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            min-width: 35px;
+            text-align: right;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .quality-select, .type-select {
+            padding: 2px 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 11px;
+        }
+
+        .control-divider {
+            height: 1px;
+            background-color: #000;
+            opacity: 0.3;
+            margin: 10px 0;
+        }
+
+        .advanced-section {
+            display: block;
+        }
+
+        .group-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            margin-top: 10px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle-button {
+            width: 100%;
+            padding: 4px 8px;
+            margin-top: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .toggle-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .reset-button {
+            width: 100%;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #333;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .reset-button:hover {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .button-group button {
+            flex: 1;
         }
 
         .tips {
-            position: fixed;
-            left: 20px;
-            bottom: 110px;
-            width: 11vw;
-            min-width: 160px;
+            width: 200px;
             color: #fff;
             background-color: #ffffff30;
             padding: 15px;
             border-radius: 8px;
-            
             visibility: hidden;
         }
 
@@ -94,41 +197,189 @@ permalink: /snow/
             font-size: 13px;
         }
 
+        input[type="checkbox"] {
+            margin-right: 5px;
+            width: 14px;
+            height: 14px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 4px;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .radio-label span {
+            cursor: pointer;
+        }
+
+        .flake-type-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .flake-type-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            height: 32px;
+            width: calc((100% - 5 * 8px) / 6); /* 6 items per row, 5 gaps of 8px */
+            min-width: 40px; /* Ensure buttons are rectangular, not square */
+            max-width: none;
+            flex-shrink: 0;
+            flex-grow: 0;
+            box-sizing: border-box; /* Include border in width calculation */
+            border-radius: 5px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .flake-type-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .flake-type-option input[type="radio"] {
+            display: none;
+        }
+
+        .flake-type-option input[type="radio"]:checked + span {
+            color: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .flake-type-option input[type="radio"]:checked ~ .flake-type-option {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .flake-type-option:has(input:checked) {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .flake-icon {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .flake-type-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0 8px;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 <body>
-    <div class="tips" id="tips">
-        <div class="note">Change snow speed and size in the menu. Click "Got It!" the menu will be hidden and display again when cursor moves on it.</div>
-        <div class="note">👇</div>
-        <span class="confirm-button" id="tips-button">Got It!</span>
-    </div>
-    <div class="control" id="control">
-        <div class="slider">
-            <svg width="20px" height="20px" viewBox="0 0 20 20">
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g transform="translate(-114.000000, -136.000000)" fill="#fff" fill-rule="nonzero">
-                        <path
-                            d="M124,136 C129.522847,136 134,140.477153 134,146 C134,151.522847 129.522847,156 124,156 C118.477153,156 114,151.522847 114,146 C114,140.477153 118.477153,136 124,136 Z M124,138.4 C119.802636,138.4 116.4,141.802636 116.4,146 C116.4,150.197364 119.802636,153.6 124,153.6 C128.197364,153.6 131.6,150.197364 131.6,146 C131.6,141.802636 128.197364,138.4 124,138.4 Z M125.730217,149.806302 C126.24729,149.554109 126.870904,149.768836 127.123097,150.28591 C127.375291,150.802983 127.160563,151.426597 126.64349,151.67879 C126.126417,151.930983 125.502803,151.716256 125.25061,151.199183 C124.998416,150.68211 125.213144,150.058496 125.730217,149.806302 Z M120.730987,150.28591 C120.983181,149.768836 121.606795,149.554109 122.123868,149.806302 C122.640941,150.058496 122.855668,150.68211 122.603475,151.199183 C122.351282,151.716256 121.727668,151.930983 121.210595,151.67879 C120.693521,151.426597 120.478794,150.802983 120.730987,150.28591 Z M127.989823,146.974639 C128.119237,146.414087 128.678564,146.064581 129.239116,146.193994 C129.799668,146.323408 130.149174,146.882735 130.019761,147.443287 C129.890347,148.003839 129.33102,148.353346 128.770468,148.223932 C128.209916,148.094518 127.86041,147.535191 127.989823,146.974639 Z M118.614969,146.193994 C119.175521,146.064581 119.734848,146.414087 119.864262,146.974639 C119.993675,147.535191 119.644169,148.094518 119.083617,148.223932 C118.523065,148.353346 117.963738,148.003839 117.834324,147.443287 C117.70491,146.882735 118.054417,146.323408 118.614969,146.193994 Z M128.781812,142.084477 C129.114408,142.453862 129.084584,143.02293 128.7152,143.355525 L126.09458,145.714656 C126.254725,146.371877 126.057911,147.093791 125.519977,147.578149 C124.740165,148.280295 123.5388,148.217334 122.836654,147.437522 C122.134508,146.65771 122.197468,145.456345 122.977281,144.754199 C123.515112,144.269933 124.253466,144.149611 124.890264,144.377402 L127.510765,142.017864 C127.880149,141.685269 128.449217,141.715092 128.781812,142.084477 Z M119.045476,142.147115 C119.407522,141.700026 120.063456,141.631084 120.510545,141.99313 C120.957635,142.355176 121.026576,143.01111 120.66453,143.458199 C120.302485,143.905289 119.646551,143.97423 119.199461,143.612184 C118.752372,143.250138 118.68343,142.594205 119.045476,142.147115 Z M123.927042,139.8 C124.502339,139.8 124.968709,140.26637 124.968709,140.841667 C124.968709,141.416963 124.502339,141.883333 123.927042,141.883333 C123.351746,141.883333 122.885376,141.416963 122.885376,140.841667 C122.885376,140.26637 123.351746,139.8 123.927042,139.8 Z">
-                        </path>
-                    </g>
-                </g>
-            </svg>
-            <input type="range" min="100" max="800" value="100" step="50" id="snowSpeedSlider">
+    <div class="control-container" id="snow-simulation-control-container">
+        <div class="control visible" id="snow-simulation-control-panel">
+        <div class="control-group">
+            <div class="control-row">
+            <div class="flake-type-group" id="flake-type-group">
+                <!-- Generated dynamically from SNOWFLAKE_TYPES configuration -->
+            </div>
+            </div>
         </div>
-        <div class="slider">
-            <svg width="19px" height="20px" viewBox="0 0 19 20">
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g transform="translate(-115.000000, -170.000000)" fill="#fff">
-                        <path
-                            d="M124.5,170 C125.063821,170 125.520889,170.457068 125.520889,171.020889 L125.52044,172.669 L126.61474,171.840731 C126.979653,171.564454 127.490399,171.648751 127.755524,172.029013 C128.020649,172.409275 127.939754,172.941504 127.574842,173.217781 L125.592642,174.718509 L125.52044,174.765 L125.52,178.132 L128.351799,176.497803 L128.35652,176.412999 L128.665089,173.946 C128.721895,173.491838 129.142372,173.155666 129.604251,173.19514 C130.030601,173.231577 130.343197,173.575354 130.344086,173.985238 L130.3377,174.088947 L130.167854,175.449303 L131.59463,174.626329 C132.082913,174.344418 132.707279,174.511716 132.98919,175 C133.2711,175.488284 133.103802,176.112649 132.615518,176.39456 L131.187988,177.218227 L132.45244,177.751784 C132.874159,177.92967 133.056529,178.414137 132.859775,178.833873 C132.663021,179.253609 132.161649,179.449667 131.739931,179.271781 L129.449162,178.30551 L129.372799,178.266227 L126.371,179.999 L129.373359,181.732803 L129.449162,181.69449 L131.739931,180.728219 C132.161649,180.550333 132.663021,180.746391 132.859775,181.166127 C133.041394,181.553575 132.899973,181.99618 132.545448,182.201892 L132.45244,182.248216 L131.189414,182.781303 L132.615518,183.60544 C133.103802,183.887351 133.2711,184.511716 132.98919,185 C132.707279,185.488284 132.082913,185.655582 131.59463,185.373671 L130.167548,184.549227 L130.3377,185.911053 C130.394506,186.365215 130.06613,186.765386 129.604251,186.80486 C129.142372,186.844334 128.721895,186.508162 128.665089,186.054 L128.35652,183.587001 L128.352359,183.501227 L125.52,181.866 L125.52156,185.235 L125.592642,185.281491 L127.574842,186.782219 C127.939754,187.058496 128.020649,187.590725 127.755524,187.970987 C127.512493,188.31956 127.063072,188.419441 126.70878,188.220864 L126.61474,188.159269 L125.52156,187.332 L125.520889,188.979111 C125.520889,189.542932 125.063821,190 124.5,190 C123.936179,190 123.479111,189.542932 123.479111,188.979111 L123.47956,187.331 L122.38526,188.159269 C122.020347,188.435546 121.509601,188.351249 121.244476,187.970987 C120.979351,187.590725 121.060246,187.058496 121.425158,186.782219 L123.407358,185.281491 L123.47956,185.235 L123.479,181.867 L120.648201,183.502197 L120.64348,183.587001 L120.334911,186.054 C120.278105,186.508162 119.857628,186.844334 119.395749,186.80486 C118.969399,186.768423 118.656803,186.424646 118.655914,186.014762 L118.6623,185.911053 L118.832146,184.550697 L117.40537,185.373671 C116.917087,185.655582 116.292721,185.488284 116.01081,185 C115.7289,184.511716 115.896198,183.887351 116.384482,183.60544 L117.812012,182.781773 L116.54756,182.248216 C116.125841,182.07033 115.943471,181.585863 116.140225,181.166127 C116.336979,180.746391 116.838351,180.550333 117.260069,180.728219 L119.550838,181.69449 L119.627201,181.733773 L122.628,180 L119.626641,178.267197 L119.550838,178.30551 L117.260069,179.271781 C116.838351,179.449667 116.336979,179.253609 116.140225,178.833873 C115.958606,178.446425 116.100027,178.00382 116.454552,177.798108 L116.54756,177.751784 L117.810586,177.218697 L116.384482,176.39456 C115.896198,176.112649 115.7289,175.488284 116.01081,175 C116.292721,174.511716 116.917087,174.344418 117.40537,174.626329 L118.832452,175.450773 L118.6623,174.088947 C118.605494,173.634785 118.93387,173.234614 119.395749,173.19514 C119.857628,173.155666 120.278105,173.491838 120.334911,173.946 L120.64348,176.412999 L120.647641,176.498773 L123.479,178.133 L123.47844,174.765 L123.407358,174.718509 L121.425158,173.217781 C121.060246,172.941504 120.979351,172.409275 121.244476,172.029013 C121.487507,171.68044 121.936928,171.580559 122.29122,171.779136 L122.38526,171.840731 L123.47844,172.668 L123.479111,171.020889 C123.479111,170.457068 123.936179,170 124.5,170 Z">
-                        </path>
-                    </g>
-                </g>
-            </svg>
-            <input type="range" min="5" max="20" value="5" id="snowFlakeSizeSlider">
+        <div class="control-divider"></div>
+        <div class="advanced-section" id="advancedSection">
+            <div class="control-group">
+                <div class="group-title">Fall Path</div>
+                <div class="control-row">
+                    <label class="control-label">Gravity:</label>
+                    <div class="slider-container">
+                        <input type="range" min="100" max="800" value="500" step="50" id="snowSpeedSlider">
+                        <span class="slider-value" id="snowSpeedValue">500</span>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">Wind Strength:</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="0" id="windSpeedSlider">
+                        <span class="slider-value" id="windSpeedValue">0</span>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">
+                        Direction:
+                        <span class="wind-arrow" id="windDirectionArrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                                <polyline points="8 6 12 2 16 6"></polyline>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="180" value="90" id="windDirectionSlider">
+                        <span class="slider-value" id="windDirectionValue">90°</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-divider"></div>
+
+            <div class="control-group">
+                <div class="group-title">Visual Settings</div>
+                <div class="control-row">
+                    <label class="control-label">Size:</label>
+                    <div class="slider-container">
+                        <input type="range" min="5" max="100" value="22" id="snowFlakeSizeSlider">
+                        <span class="slider-value" id="snowSizeValue">22</span>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">Density:</label>
+                    <div class="slider-container">
+                        <input type="range" min="100" max="1000" value="500" step="50" id="snowIntensitySlider">
+                        <span class="slider-value" id="snowDensityValue">500</span>
+                    </div>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">
+                        <input type="checkbox" id="blurToggle" checked>
+                        Blur Effects
+                    </label>
+                </div>
+            </div>
+            <div class="control-divider"></div>
+            <div class="button-group">
+                <button class="reset-button" id="playPauseButton">Stop</button>
+                <button class="reset-button" id="resetToDefaultsButton">Reset to Default</button>
+            </div>
+        </div>
+
+        </div>
+
+        <div class="tips" id="tips">
+            <div class="note">The panel will automatically disappear. Hover at the bottom to show it again.</div>
+            <div class="note">👈</div>
+            <span class="confirm-button" id="tips-button">Got It!</span>
         </div>
     </div>
+
     <canvas id="snow"></canvas>
-    {%- include tool_scripts.html name="snow.simulation" -%}
+    <script src="/assets/tools/source/snow.simulation.enhanced.js"></script>
 </body>
 </html>
