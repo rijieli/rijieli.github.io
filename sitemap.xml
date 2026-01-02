@@ -1,7 +1,7 @@
 ---
 sitemap_item: false
 ---
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:search="https://roger.zone/search">
   {% for post in site.posts %}
     {% unless post.published == false %}    
     <url>
@@ -9,6 +9,10 @@ sitemap_item: false
       <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
       <changefreq>monthly</changefreq>
       <priority>0.5</priority>
+      <search:title>{{ post.title | xml_escape }}</search:title>
+      <search:category>{{ post.categories | first | xml_escape }}</search:category>
+      <search:tags>{{ post.tags | join: ', ' | xml_escape }}</search:tags>
+      <search:type>Post</search:type>
     </url>
     {% endunless %}
   {% endfor %}
@@ -24,7 +28,41 @@ sitemap_item: false
     {% endif %}
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <search:title>{{ page.title | default: page.nav_title | xml_escape }}</search:title>
+    <search:type>Page</search:type>
   </url>
   {% endif %}
+  {% endfor %}
+  {% for work in site.data.archives %}
+  <url>
+    <loc>{{ site.url }}/archives#workitem-{{work.id}}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <search:title>{{ work.title | xml_escape }}</search:title>
+    <search:type>Work</search:type>
+  </url>
+  {% endfor %}
+  {% for project in site.data.projects %}
+  {% if project.hide != "1" %}
+  <url>
+    <loc>{{ site.url }}/about/#project-{{project.slug}}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <search:title>{{ project.title | xml_escape }}</search:title>
+    <search:type>Code</search:type>
+  </url>
+  {% endif %}
+  {% endfor %}
+  {% for category in site.categories %}
+  <url>
+    <loc>{{ site.url }}/tags/#{{category[0] | uri_escape}}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <search:title>{{ category[0] | xml_escape }}</search:title>
+    <search:type>Category</search:type>
+  </url>
   {% endfor %}
 </urlset>

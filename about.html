@@ -38,7 +38,7 @@ permalink: /about/
         <ol class="projects-list">
             {% for item in site.data.projects %}
             {% if item.hide != "1" %}
-            <li class="list-item blog-card-shadow" id="project-{{item.id}}">
+            <li class="list-item blog-card-shadow" id="project-{{item.slug}}">
                 <div class="image-wrapper">
                     <a href="{{ item.url }}" target="_blank">
                         <img src="{{ item.img_path }}" alt="{{item.desc}}" loading="lazy">

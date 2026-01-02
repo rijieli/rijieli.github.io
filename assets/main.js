@@ -22,8 +22,8 @@
   let categoryMap = {
     post: "Blog",
     work: "Archive",
-    project: "Project",
-    tag: "Tag",
+    code: "Project",
+    category: "Tag",
   };
 
   if (searchIcon) {
@@ -69,10 +69,70 @@
       return;
     }
 
-    let content = document.createElement("p");
-    content.innerText = this.responseText;
+    // Parse XML sitemap
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(this.responseText, "text/xml");
+    
+    // Check for parsing errors
+    let parseError = xmlDoc.querySelector("parsererror");
+    if (parseError) {
+      console.error("Error parsing XML:", parseError.textContent);
+      return;
+    }
 
-    siteMapData = JSON.parse(this.responseText);
+    // Initialize data structure
+    siteMapData = {
+      Post: [],
+      Work: [],
+      Code: [],
+      Category: []
+    };
+
+    // Extract all URL entries
+    let urls = xmlDoc.querySelectorAll("url");
+    urls.forEach((urlNode) => {
+      let loc = urlNode.querySelector("loc");
+      if (!loc) return;
+      
+      // Find search:title and search:type elements
+      // Check all child elements for namespace-aware matching
+      let title = null;
+      let type = null;
+      
+      for (let child of urlNode.children) {
+        // Check if it's a title element (namespace-aware)
+        if (child.localName === "title" || child.nodeName.includes("title")) {
+          title = child;
+        }
+        // Check if it's a type element (namespace-aware)
+        if (child.localName === "type" || child.nodeName.includes("type")) {
+          type = child;
+        }
+      }
+      
+      if (!title) return; // Skip if no title found
+      
+      let url = loc.textContent;
+      let titleText = title.textContent;
+      let typeText = type ? type.textContent : "Page";
+      
+      // Remove base URL if present
+      if (url.startsWith("https://roger.zone")) {
+        url = url.replace("https://roger.zone", "");
+      }
+      
+      // Map type to category
+      let category = typeText;
+      if (category === "Post") {
+        siteMapData.Post.push({ title: titleText, url: url });
+      } else if (category === "Work") {
+        siteMapData.Work.push({ title: titleText, url: url });
+      } else if (category === "Code") {
+        siteMapData.Code.push({ title: titleText, url: url });
+      } else if (category === "Category") {
+        siteMapData.Category.push({ title: titleText, url: url });
+      }
+    });
   }
 
   function matchPattern(keyword, item) {
@@ -244,7 +304,7 @@
   var oReq = new XMLHttpRequest();
   oReq.addEventListener("load", fetchSitemap);
   oReq.addEventListener("loadend", initSearchComponent);
-  oReq.open("GET", "/sitemap.json");
+  oReq.open("GET", "/sitemap.xml");
   oReq.send();
 
   /* ============================================================================ */
