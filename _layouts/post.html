@@ -22,10 +22,16 @@ layout: default
       </span>
       {% endif %}
 
-      <time class="post-date" class="dt-published" datetime="{{ page.date | date_to_xmlschema }}"
-      itemprop="datePublished">
+      {% if page.updated %}
+      <time class="post-date dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+        {{ page.date | date: site.data_formats.date_format_short }} · Edited {{ page.updated | date: site.data_formats.date_format_short }}
+      </time>
+      <meta itemprop="dateModified" content="{{ page.updated | date_to_xmlschema }}">
+      {% else %}
+      <time class="post-date dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
         {{ page.date | date: site.data_formats.date_format_formal }}
       </time>
+      {% endif %}
 
       {% include visit-counter.html %}
     </div>
