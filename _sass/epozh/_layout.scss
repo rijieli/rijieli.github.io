@@ -25,11 +25,10 @@
   justify-content: space-between;
 
   .site-title {
-    font-family: "Roboto Condensed", "PT Sans Narrow", "Helvetica Neue", Helvetica, PingFang SC,
-      BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Microsoft YaHei", sans-serif;
+    font-family: $base-font-family;
     margin: 0;
     display: block;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     -webkit-font-smoothing: antialiased;
     line-height: $nav-height;
@@ -75,9 +74,8 @@
 
       .nav-about-dot {
         display: inline-block;
-        width: 20px;
-        height: 10px;
-        border-radius: 5px;
+        width: 22px;
+        height: 6px;
         background-color: $dark-color;
         margin: 0;
         padding: 0;
@@ -170,7 +168,7 @@
   .search-icon {
     display: block;
     line-height: 14px;
-    
+
     svg {
       height: 14px;
       width: 14px;
@@ -602,16 +600,16 @@
 
   .gotop-button:hover {
     .gotop-icon {
-      fill: $dark-color;
+      stroke: $dark-color;
 
       @include dark-mode {
-        fill: $dark-color-darkmode;
+        stroke: $dark-color-darkmode;
       }
     }
   }
 
   .gotop-icon {
-    fill: $grey-dark-color;
+    stroke: $grey-dark-color;
   }
 }
 
@@ -643,7 +641,7 @@
   }
 }
 
-/** 
+/**
  * Sidebar Define Here
  */
 
@@ -712,7 +710,7 @@
   clear: both;
 }
 
-/** 
+/**
  * Category
  */
 .category-group {
