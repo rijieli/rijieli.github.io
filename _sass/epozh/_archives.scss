@@ -8,6 +8,7 @@
     margin: 0px;
     overflow: hidden;
     padding-top: 30px;
+    padding-left: 0;
 
     .no-url {
         cursor: not-allowed;
@@ -158,11 +159,12 @@
     text-align: center; 
     height: 50px;
     margin:0px;
-    background-color: $grey-color;
-    color: #7a7a7a;
+    background-color: var(--surface);
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
 
     a {
-        color: #7a7a7a;
+        color: var(--muted);
         text-decoration: none;
     }
 

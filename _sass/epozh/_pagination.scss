@@ -1,96 +1,29 @@
 .pagination {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.875rem;
+}
 
-    margin-top: 20px;
-    font-size: 16px;
-    padding-left: 2%;
-    padding-right: 2%;
-    color: $grey-color;
-    text-align: center;
+.pagination a {
+  color: var(--ink);
+  font-weight: 550;
+  text-decoration: none;
+  transition: color var(--duration) var(--ease);
 
-    a {
-        color: $grey-color;
-        text-decoration: none;
-    }
+  &:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
 
-    a:hover {
-        color: $dark-color;
-    }
+  &:visited {
+    color: var(--ink);
+  }
+}
 
-    #page-select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        padding: 0 16px;
-    
-        border: 1px solid #e0e0e0;
-        border-radius: 3px;
-        //box-shadow: inset 1px 1px 1px 0px rgba(0, 0, 0, 0.2);
-        background: #fff;
-        height: 24px;
-        line-height: 1;
-        font-size: 12px;
-        margin: 0;
-        color: $dark-color;
-        font-weight: 500;
+.pagination a[rel="prev"] {
+  margin-right: auto;
+}
 
-        @include dark-mode {
-            background-color: #000;
-            color: $dark-color-darkmode;
-        }
-    }
-
-    .pagination-list {
-        list-style: none;
-        margin:0;
-        padding:0;
-        width: 100%; 
-        align-items: center; 
-        display: flex;
-    }
-
-    .pagination-side {
-        display: flex;
-        flex: 1;
-        align-items: center;
-    }
-
-    .pagination-side.prev {
-        justify-content: flex-start;
-        font-size: 14px;
-    }
-
-    .pagination-side.next {
-        justify-content: flex-end;
-        font-size: 14px;
-    }
-
-    .pagination-list-item {
-        display: list-item; 
-        margin: 0px 3px;
-        height: 26px;
-        
-        a {
-            display: block;
-            padding-left: 3px;
-            padding-right: 3px;
-            color: $dark-color;
-
-            @include dark-mode {
-                color: $dark-color-darkmode
-            }
-        }
-    }
-
-    .current {
-        border-bottom: 3px $dark-color solid;
-        color: $dark-color;
-
-        @include dark-mode {
-            border-bottom: 3px $dark-color-darkmode solid;
-        }
-    }
-
-    .current .omit-control {
-        display: none;
-    }
+.pagination a[rel="next"] {
+  margin-left: auto;
 }

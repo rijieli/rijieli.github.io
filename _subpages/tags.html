@@ -4,7 +4,7 @@ permalink: /tags/
 title: Tags
 ---
 
-<div class="wrapper">
+<div class="wrapper tags-page">
     {%- if site.categories.size > 0 -%}
     {% assign tags = site.categories %}
 
@@ -13,7 +13,7 @@ title: Tags
           {% for tag in tags %}
             {% assign visible_post = tag[1] | where: "hidden_post", false %}
             {% if visible_post.size > 0 %}
-            <a href="/tags/#{{category[0]}}" title="{{ category[1].size }} posts has this tag">
+            <a href="/tags/#{{ tag[0] }}" title="{{ visible_post.size }} posts has this tag">
                 <div># {{ tag[0] }}</div>
             </a>
             {% endif %}

@@ -1,37 +1,10 @@
-{% if paginator.total_pages > 1%}
-<div class="pagination">
-    <ul class="pagination-list">
-        <li class="pagination-side prev">
-            {% if paginator.previous_page %}
-            <a href="{{ paginator.previous_page_path }}">
-                <img src="{{ "/assets/img/prev-button.svg" | relative_url }}" alt="上一页" >
-            </a>
-            {% endif %}
-        </li>
-
-        <select name="page-select" id="page-select" onchange="if (this.value) window.location.href=this.value">
-            {% for i in (1..paginator.total_pages) %}
-            
-                {% assign my_variable = "" %}
-                {% if i == paginator.page %}
-                {% assign my_variable = "selected" %}
-                {% endif %}
-
-                {% if i == 1 %}
-                <option value="/" {{my_variable}}>{{i}}</option>
-                {% else %}
-                <option value="/blog/page{{i}}" {{my_variable}}>{{i}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-
-        <li class="pagination-side next">
-            {% if paginator.next_page %}
-            <a href="{{ paginator.next_page_path }}">
-                <img src="{{ "/assets/img/next-button.svg" | relative_url }}" alt="下一页" >
-            </a>
-            {% endif %}
-        </li>
-    </ul>
-</div>
+{% if paginator.total_pages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+  {% if paginator.previous_page %}
+  <a href="{{ paginator.previous_page_path }}" rel="prev">Newer</a>
+  {% endif %}
+  {% if paginator.next_page %}
+  <a href="{{ paginator.next_page_path }}" rel="next">Older</a>
+  {% endif %}
+</nav>
 {% endif %}

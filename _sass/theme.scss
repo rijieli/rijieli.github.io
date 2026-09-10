@@ -1,58 +1,93 @@
 @charset "utf-8";
 
-// Define defaults for each variable.
+// Tokens. Cool zinc editorial, one accent, no pure black/white.
 
-$base-font-family: ui-sans-serif, system-ui, -apple-system, Helvetica, "Helvetica Neue", PingFang SC,
-  BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Microsoft YaHei", sans-serif,
-  "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-$serif-font-family: "PT Serif", ui-serif, Georgia, "STSongti SC", "SimSong", "STSong", "Source Serif Pro", "noto serif", serif;
-$monospace-font-family: ui-monospace, Monaco, Menlo, "SF Mono Regular", "Lucida Console", SFMono-Regular, Consolas, "Courier New", Liberation Mono, monospace;
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "SF Pro Text",
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono",
+    monospace;
 
-$base-font-size: 15px !default;
-$base-font-weight: 450 !default;
+  --bg: #ffffff;
+  --bg-nav: rgba(255, 255, 255, 0.78);
+  --surface: #ffffff;
+  --ink: #171717;
+  --ink-soft: #3f3f3f;
+  --muted: #6b6b6b;
+  --line: rgba(23, 23, 23, 0.08);
+  --accent: #1a66c2;
+  --accent-hover: #154e96;
+  --code-bg: #f1f1ef;
+  --tag-bg: rgba(23, 23, 23, 0.05);
+  --overlay: rgba(17, 17, 17, 0.72);
 
-$base-line-height: 1.5 !default;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --nav-h: 3.5rem;
+  --measure: 56rem;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 180ms;
+
+  --z-base: 1;
+  --z-nav: 40;
+  --z-gotop: 50;
+  --z-viewer: 80;
+  --z-skip: 100;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111214;
+    --bg-nav: rgba(17, 18, 20, 0.78);
+    --surface: #181a1f;
+    --ink: #ececec;
+    --ink-soft: #c8c8c8;
+    --muted: #9a9a9a;
+    --line: rgba(255, 255, 255, 0.09);
+    --accent: #6ba3f5;
+    --accent-hover: #8bb8f8;
+    --code-bg: rgba(255, 255, 255, 0.06);
+    --tag-bg: rgba(255, 255, 255, 0.06);
+    --overlay: rgba(0, 0, 0, 0.78);
+  }
+}
+
+$base-font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Text",
+  "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+$serif-font-family: ui-serif, Georgia, "Iowan Old Style", "Songti SC", serif;
+$monospace-font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas,
+  "Liberation Mono", monospace;
+
+$base-font-size: 17px !default;
+$base-font-weight: 400 !default;
+$base-line-height: 1.7 !default;
 $heavy-font-weight: 600;
-$small-font-size: $base-font-size * 0.875 !default;
-$spacing-unit: 48px !default;
+$small-font-size: 0.8125rem !default;
+$spacing-unit: 3rem !default;
 
-// Color defines
-$dark-color: #222 !default;
-$dark-color-darkmode: #eee !default;
-
-$white-color: #fff !default;
-$white-color-darkmode: #0d0f13 !default;
-
+$dark-color: #171717 !default;
+$dark-color-darkmode: #ececec !default;
+$white-color: #ffffff !default;
+$white-color-darkmode: #111214 !default;
 $grey-color: #e8e8e8 !default;
-$grey-color-darkmode: #14161c !default;
+$grey-color-darkmode: #181a1f !default;
+$grey-dark-color: #6b6b6b !default;
+$grey-dark-color-darkmode: #9a9a9a !default;
+$blue-color: #1a66c2 !default;
+$blue-color-darkmode: #6ba3f5 !default;
+$code-background-color: #f1f1ef !default;
+$code-background-color-darkmode: rgba(255, 255, 255, 0.06) !default;
+$code-keyword-color: #1a66c2 !default;
+$blockquote-color: #6b6b6b !default;
+$blockquote-color-darkmode: #9a9a9a !default;
 
-$grey-dark-color: #888888 !default;
-$grey-dark-color-darkmode: #aaaaaa !default;
-
-$blue-color: rgb(21, 108, 207) !default;
-$blue-color-darkmode: rgb(88, 166, 255) !default;
-
-$code-background-color: lighten($dark-color, 83%) !default;
-$code-background-color-darkmode: #ffffff10 !default;
-$code-keyword-color: rgb(0, 119, 255) !default;
-$blockquote-color: #737873 !default;
-$blockquote-color-darkmode: #a8b2bd !default;
-
-// Width of the content area
-$content-width: 1080px !default;
-
+$content-width: 56rem !default;
 $on-palm: 512px !default;
 $on-laptop: 960px !default;
+$nav-height: 3.5rem !default;
 
-$nav-height: 64px !default;
-
-// Use media queries like this:
-// @include media-query($on-palm) {
-//   .wrapper {
-//     padding-right: $spacing-unit / 2;
-//     padding-left: $spacing-unit / 2;
-//   }
-// }
 @mixin media-query($device) {
   @media screen and (max-width: $device) {
     @content;
@@ -69,7 +104,6 @@ $nav-height: 64px !default;
   font-size: $base-font-size * $ratio;
 }
 
-// Import partials.
 @import "epozh/layout", "epozh/base", "epozh/syntax-highlighting",
   "epozh/archives", "epozh/projects", "epozh/toc-sidebar", "epozh/pagination",
   "epozh/global-search", "epozh/dark-mode", "custom/blog", "custom/cover";

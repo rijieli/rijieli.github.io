@@ -4,9 +4,9 @@ A Jekyll-powered personal website hosted at [roger.zone](https://roger.zone).
 
 ## Setup
 
-1. **Ruby version**: Use Ruby 2.7.3 (automatically set by `.ruby-version`)
+1. **Ruby version**: Use Ruby 3.3.4 (automatically set by `.ruby-version`)
    ```bash
-   rbenv install 2.7.3  # if not installed
+   rbenv install 3.3.4  # if not installed
    ```
 
 2. **Install dependencies**:

@@ -3,10 +3,10 @@
  */
 .highlight {
   @extend %vertical-rhythm;
-  border-radius: 8px;
+  border-radius: var(--radius);
 
   .highlighter-rouge & {
-    background: $code-background-color;
+    background: var(--code-bg);
   }
 
   .c     { color: #998; font-style: italic } // Comment

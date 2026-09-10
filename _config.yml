@@ -80,7 +80,7 @@ permalink: /post/:title/
 
 # Jekyll Paginate Config
 
-paginate: 8
+paginate: 13
 paginate_path: "/blog/page:num/"
 
 # Exclude from processing.

@@ -8,7 +8,6 @@ layout: default
 <div class="wrapper">
   <article itemscope itemtype="http://schema.org/BlogPosting">
 
-    
     {% if page.cover_image %}
     {% assign centered_title=" post-centered-itemd" %}
     {% endif %}
@@ -41,7 +40,7 @@ layout: default
     </div>
     <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
   </article>
-  
+
   <div class="post-tag">
     {% if page.categories.size > 0 %}
     <div class="category-tag">
@@ -60,7 +59,7 @@ layout: default
 
   <div class="post-image-viewer">
     <div class="image-viewer-wrapper">
-      <img src="">
+      <img src="" alt="">
     </div>
   </div>
 
@@ -69,7 +68,7 @@ layout: default
 <script>
 
   let toc_item_count = document.querySelectorAll(".toc-sidebar-item").length
-  
+
   if(toc_item_count < 2) {
     if(document.querySelector("#sidebar") != null) {
       document.querySelector("#sidebar").remove()
@@ -83,6 +82,7 @@ layout: default
   function showImage(evt) {
     let imgDomImage = document.querySelector(".post-image-viewer img");
     imgDomImage.src = evt.target.src;
+    imgDomImage.alt = evt.target.alt || "";
     imgDom.style.display = "block";
   }
 </script>

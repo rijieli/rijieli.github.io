@@ -4,10 +4,11 @@
 {%- include head.html -%}
 
 <body>
+  <a class="skip-link" href="#content">Skip to content</a>
 
   {%- include header.html -%}
 
-  <main class="page-content" aria-label="Content">
+  <main id="content" class="page-content" aria-label="Content">
       {{ content }}
   </main>
 
@@ -19,7 +20,6 @@
 
 {% include scroll_to_top.html %}
 
-<!-- Global Visit Count Update Logic -->
 {% if page.url %}
 <script>
 (() => {

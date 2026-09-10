@@ -1,20 +1,14 @@
 <footer class="footer">
-  <div class="footer-item-list wrapper">
-    <div class="footer-item">
-      {{ site.copyright_text }}
-    </div>
-    <div class="footer-links">
-      <div class="footer-item">
-        <a href="{{ "/feed.xml" | relative_url }}" class="footer-link">RSS</a></li>
-      </div>
-      <div class="footer-item">
+  <div class="wrapper">
+    <div class="footer-inner">
+      <p class="footer-copy">{{ site.copyright_text }}</p>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="{{ "/feed.xml" | relative_url }}" class="footer-link">RSS</a>
         <a class="footer-link" href="https://apps.apple.com/developer/id1626398328">Apps</a>
-      </div>
-      <div class="footer-item">
         {%- if site.email -%}
         <a class="footer-link" href="mailto:{{ site.email }}">Contact</a>
         {%- endif -%}
-      </div>
+      </nav>
     </div>
   </div>
 </footer>

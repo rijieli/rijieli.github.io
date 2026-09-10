@@ -6,12 +6,11 @@ title: Blog
 <div class="wrapper blog">
   {%- if paginator.posts.size > 0 -%}
   <ul class="post-list-plain">
-    <!-- Uncoment code below, uncoment _config.yml, and include paginator.html to use paginator -->
     {%- for post in paginator.posts -%} {%- if post.hidden_post != true -%}
     <li class="list-item">
       {%- assign date_format = "%b %d, %Y" -%}
+      <p class="item-date">{{ post.date | date: date_format }}</p>
       <div class="item-info">
-        <p class="item-date">{{ post.date | date: date_format }}</p>
         <a class="item-link" href="{{ post.url | relative_url }}">
           {{ post.title | escape }}
         </a>
@@ -20,7 +19,7 @@ title: Blog
     </li>
     {%- endif -%} {%- endfor -%}
   </ul>
-  {%- else - %}
-  <h2>No Posts Available.</h2>
+  {%- else -%}
+  <p class="blog-empty">No posts yet.</p>
   {%- endif -%} {% include pagination.html %}
 </div>
